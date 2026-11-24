@@ -278,12 +278,14 @@ body.shared .sharedTop{display:block;max-width:560px;margin:10px auto 16px}
         <h2><span class="n">3</span>Money</h2>
         <p class="hint">Per player, per night. Leave a box empty if your league doesn’t do it.</p>
         <div class="grid3">
-          <div class="field"><label for="fee">Entry $</label><input type="number" id="fee" inputmode="decimal" min="0" step="1" placeholder="10"></div>
-          <div class="field"><label for="ace">Ace pot $</label><input type="number" id="ace" inputmode="decimal" min="0" step="0.5" placeholder="1"></div>
+          <div class="field"><label for="cur">Currency</label>
+            <select id="cur"><option value="$">$</option><option value="£">£</option><option value="€">€</option></select></div>
+          <div class="field"><label for="fee">Entry</label><input type="number" id="fee" inputmode="decimal" min="0" step="1" placeholder="10"></div>
+          <div class="field"><label for="ace">Ace pot</label><input type="number" id="ace" inputmode="decimal" min="0" step="0.5" placeholder="1"></div>
           <div class="field"><label for="aceExtra">Ace pot money is</label>
             <select id="aceExtra"><option value="in">Part of the entry</option><option value="extra">Paid on top</option></select></div>
-          <div class="field"><label for="ctp">Of the entry, to CTP $</label><input type="number" id="ctp" inputmode="decimal" min="0" step="0.5" placeholder="0"></div>
-          <div class="field"><label for="club">Of the entry, to club $</label><input type="number" id="club" inputmode="decimal" min="0" step="0.5" placeholder="0"></div>
+          <div class="field"><label for="ctp">Of the entry, to CTP</label><input type="number" id="ctp" inputmode="decimal" min="0" step="0.5" placeholder="0"></div>
+          <div class="field"><label for="club">Of the entry, to club</label><input type="number" id="club" inputmode="decimal" min="0" step="0.5" placeholder="0"></div>
           <div class="field"><label for="perRow">Each row in the results is</label>
             <select id="perRow"><option value="1">One player</option><option value="2">A doubles team (2 entries)</option></select></div>
           <div class="field"><label for="mode">Who gets paid</label>
@@ -292,20 +294,20 @@ body.shared .sharedTop{display:block;max-width:560px;margin:10px auto 16px}
           <div class="field" id="splitBox"><label for="split">Our split, % per place</label><input type="text" id="split" placeholder="50 30 20"></div>
           <div class="field"><label for="unit">Round payouts to</label>
             <select id="unit"><option value="100">Whole dollars</option><option value="500">$5 bills</option><option value="1">Exact cents</option></select></div>
-          <div class="field"><label for="acePot">Ace pot coming in $</label><input type="number" id="acePot" inputmode="decimal" min="0" step="1"></div>
-          <div class="field"><label for="ctpPot">CTP carried over $</label><input type="number" id="ctpPot" inputmode="decimal" min="0" step="1"></div>
+          <div class="field"><label for="acePot">Ace pot coming in</label><input type="number" id="acePot" inputmode="decimal" min="0" step="1"></div>
+          <div class="field"><label for="ctpPot">CTP carried over</label><input type="number" id="ctpPot" inputmode="decimal" min="0" step="1"></div>
         </div>
         <div class="grid3" style="margin-top:12px">
           <div class="field"><label for="aces">Aces tonight</label><input type="text" id="aces" placeholder="Names, comma separated" list="plist"></div>
           <div class="field"><label for="ctpWin">CTP winners</label><input type="text" id="ctpWin" placeholder="Names, comma separated" list="plist"></div>
-          <div class="field"><label for="counted">Cash you counted $</label><input type="number" id="counted" inputmode="decimal" min="0" step="1" placeholder="optional"></div>
+          <div class="field"><label for="counted">Cash you counted</label><input type="number" id="counted" inputmode="decimal" min="0" step="1" placeholder="optional"></div>
         </div>
         <datalist id="plist"></datalist>
         <details class="more">
           <summary>Ace pot rule, added cash, ace buy-ins</summary>
           <div class="grid2" style="margin-top:10px">
             <div class="field"><label for="acePct">An ace wins this % of the pot</label><input type="number" id="acePct" inputmode="numeric" min="0" max="100" step="5" placeholder="100"></div>
-            <div class="field"><label for="aceCap">Most one ace night pays $</label><input type="number" id="aceCap" inputmode="decimal" min="0" step="5" placeholder="no limit"></div>
+            <div class="field"><label for="aceCap">Most one ace night pays</label><input type="number" id="aceCap" inputmode="decimal" min="0" step="5" placeholder="no limit"></div>
           </div>
           <div id="addedBox" style="margin-top:10px"></div>
           <p style="margin:10px 0 0">How places split: with 3 paid, 1st gets 3 shares, 2nd 2, 3rd 1 (50% / 33% / 17%). Tied players share the money of the places they tie for and get the same amount. Rounding hands whole bills to whoever is most short of their exact share; any change that can’t be split goes into the ace pot.</p>
@@ -667,11 +669,11 @@ var CHECKOUT = 'https://whop.com/checkout/plan_buTInGJbU5GKX';        /* $9 one-
 var CHECKOUT_HOME = 'https://whop.com/checkout/ch_U8cKD46FEy8JVtJ/';  /* same plan, returns to samsbench.com/discgolf-league/?bought=1#pro */
 var VERIFY = 'https://app-bizz-api.whop.site/api/verify';
 var PRICE = '$9';
-var GIFT = [];            /* SHA-256 of gift codes handed out in letters (codes themselves are not in this file) */
+var GIFT = ["020ad685be82e4afd12e7854e83c58ebcff657ace5623bdc80ffe68fde39e815", "08e249ea0e6b449b4c858540ba6de4b0578bbfdbb8b79d4bf12e49f95a3e5d45", "090e77bcdb9d4a45d55bd06752e4020b3f37020a4c75a74b851ba86ebe743650", "0d0d61e6d23b138a8f6aa884411b3a474e15d607095b20a05b4d09fbd596297b", "24c2f463ed5c015502ecb294c2e419b01c1b9a6fbdfd95832461c5116e740381", "27cdc5ad1921a457c3c8deb229909931ec4897929170f9d66013c25ffade9887", "308879f42839aad041fb8926bd4e9c4bcfb3101d5098bd0e31eaf5306824c9f2", "360b15484a269e99711068bfb46cb3e24d40217d713b7e643d1d18bb4460e021", "39c6f36dc387ffe61b009381fedd4a0ccf458930697a05fac639d33325f4bb1d", "3a8cac8b955d98b75d0da66bb745ae686d2d1f7d0e10f7a0f7e62324aa909cd3", "3d3adcfda24e8e506ab2b7f70c5d05695a0aab532b82391471cc039e35e21f1a", "3fe0c30ece3fd702dea080fc1ac34343de7712b692ec632f9ffc45ccfe0ed4c7", "42bcbf6699e06066dcb5da062e794aff5ab10b8e695ae7e9b97bdea80a5e80bf", "43093aca7773be274d5fc2fdc8837ac58e17b3d14d2529bdca06503a5612b130", "49c89b6795457c60b8b195b77c9e4474b98a39569b63babea7cdb0dbb8d57398", "4aa83e7c985a0da5aa3f7df29980e531777b990ab51a035eec30cf40be9195da", "4e42acb8f941983943a5690aeddbdd2014887fe6c15d36dfb2e2213cc3f175d6", "4ed7d625fed3886dff545bb58f0a8793faea957a4175a85bfd17ba7e472a5dd7", "541109449671d8189798452fa9ab043e252e5bbe199e16236792ce3d9b73f5b3", "55c11fdb83cefaf548a728243214eaf62a620a940a4d171adeae2359b03fdef8", "5735b46dbb1478188ccc4d3d39494b9e0befba739a445edcc58f03d94bac1133", "585ef79ba52dc527adf6fb7fef4635a60a9b87a9d93df3764018a660710ea561", "6334d13c815ff9f0b551b8037c21aab36ac2abcde760e306dd76191316ea45a0", "6613070026a8d67665b0301be6df9a3e32ba3057df9dfc2cc4fe24adb79db978", "6ea96deea949a7f7b92423b9c686d52e3d78ec66c529b419840c77e029e33612", "7a226a3cc3005df6474767410bbf310b79619ca49ce621f294ba0ba3690083ec", "7db04341996b28d9e46f5a41503ea695bd5b27ed4d06cb9ddc526dadc9d2d0c3", "802b2a9a320f4ee97e8a7a1defc72b41197f491e2d4387679ee64123abd8cf51", "80fd95a41a955bbe73d0d45bd78adfd0f97008728e8444859f7018dfb0b59e87", "8478e89b032c9d65babd940df1d21809ab3c830d9e1ce66f8e67397a09b9d71f", "84927eceeeabe98408f365c97e2d7409cd6732f7a0883bec9e35785986ab4d3e", "853f5e4c5e00e16ccfaafa9ff9b58048a73593bb530886e9adf9de064f0adb80", "899c22e650bb0040ca2c2ad3863bcb36150cd89e2b1220659c7257e3de501199", "985e77886dbb0e5151f91990bcde5130cc37d072bba08b1b32b042aad3d7da89", "9c12ec404fb3d4df88143098ad6bf40650d903b4723790c7b2e4aa224fc91f85", "9e82da5881588b929863105e09f1eefb2479398f33cdbe1a7c78ad88c8588276", "a19c30e001bc0968e204e66bbb346476b2b30ffc017fe1cfa084c6ad1eb9ddc7", "a22a98e76aba01459bbde0335ed5559fffe492ef40d70cf655f40d46e5a7088c", "a69a512aa1d589caf8cda64949ef3cab8f1edc8ed2d0cdbdbf9a7dd5ee683005", "b16a804a05de6ec071299f5be8af1000dae61e2307f1926336d2c4dc06a2d999", "c3687b570ef066ac56430e431135c0265a85ec35068b6ed4c50babf82bfae418", "d534e7c955a6c7514da8ba76a759a1c9474bf091697a44c133ebf0b7e5ecfe38", "d5474d42d55993040eb404f0a0a3876bba5a3d4b41890e4a9c80a9c19d3396ad", "d7e63eb8b6268c3b1641643764b183cd517dc1560c158dc150750add4a04346e", "d967941e5aba4cb28295ce8cebacedb4fc6cdca79bc5f9bc84a1ed9793b677d3", "dfd526206810b36c3ac26c14c341c44a51538331a3d7d4f01b5ec4fdaadabc7b", "e000a9e230462db88e9833c9616e9868297ddeeeedc2331dc8323d5400ca61d0", "e46d0f7ed59cb4c2dc67157307ef8b40e7f6942f547f00aa406f05d814a2e743", "e6d1961dd108626d3daf441ad0d27fdd08d841ac29e8cef8ed23acf0f5f45afd", "e93c91e795222429a93b022d1281dcaf7f709b065f9b5650a5b627b167e46cb5", "e9862d54321e3ce5dd380bdd2a577bb7e94ba09368e513060fc1c1044db2722c", "e9f2f394fc670fe553276de89ce8179240b590a0d03a30f70211af1b46e55736", "ea6ecd69f7fccda7dfde75a705cc069f14dabf64ace1e5bcd7c3e8abf8e35153", "ebd6acc3e515b3acae348db797a69ccd7eb952ce4e45b8fc58a534eeef6a3da4", "fbd5519a8f1522a620d6ff965c0c4c200625866584ad708dcdbf01bdd495e8d9", "ff86c41a4ba069d593e14b2f635383077c4862e78c2f7b765879402a2111a37e"];            /* SHA-256 of gift codes handed out in letters (codes themselves are not in this file) */
 var FREE_NIGHTS = 3;
 var KEY = 'tn.v1', PROKEY = 'tn.pro', AFFKEY = 'tn.aff';
 var $ = function(id){ return document.getElementById(id); };
-var M = TN.money;
+function M(c){ var cur = SHARED ? (SHARED.u || '$') : (L().cfg.cur || '$'); return TN.money(c, cur); }
 
 /* ---------- tracking (GoatCounter). ?via= is kept for the tab and, first-touch, for later visits, so a lock-in next week still counts for the letter that brought them. ---------- */
 var GC_CODE = 'tagnight';
@@ -701,7 +703,7 @@ function trackOnce(name){ if(!ONCE[name]){ ONCE[name] = 1; track(name); } }
 /* ---------- storage ---------- */
 function lsGet(k, d){ try{ var t = localStorage.getItem(k); return t ? JSON.parse(t) : d; }catch(e){ return d; } }
 function lsSet(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); return true; }catch(e){ return false; } }
-function defCfg(){ return {fee:'', ace:'', ctp:'', club:'', aceExtra:'in', perRow:1, mode:'third', val:'', split:'', unit:100, acePct:'', aceCap:'', tie:'lowtag', dnf:'keep', scoreUse:'all'}; }
+function defCfg(){ return {cur:'$', fee:'', ace:'', ctp:'', club:'', aceExtra:'in', perRow:1, mode:'third', val:'', split:'', unit:100, acePct:'', aceCap:'', tie:'lowtag', dnf:'keep', scoreUse:'all'}; }
 function newLeague(name){ return {name: name || '', roster: {}, cfg: defCfg(), pots: {ace:0, ctp:0}, history: []}; }
 function blank(){ return {v:1, cur:0, leagues:[newLeague()], tonight: blankNight()}; }
 function blankNight(){ return {src:'', tab:'file', paste:'', typed:'', rows:null, scoreCol:'', players:[], date: today(), dateSet:false, aces:'', ctpWin:'', counted:'', added:{}, aceBuy:{}, order:{}, ex:false, locked:false, potsBefore:null, warn:[], skipped:[]}; }
@@ -1067,7 +1069,7 @@ function renderForm(){
   var c = L().cfg, t = S.tonight;
   ['fee','ace','ctp','club','val','acePct','aceCap','split'].forEach(function(k){ setVal(k, c[k]); });
   $('mode').value = c.mode; $('unit').value = String(c.unit); $('tie').value = c.tie; $('scoreUse').value = c.scoreUse; $('dnf').value = c.dnf;
-  $('aceExtra').value = c.aceExtra; $('perRow').value = String(c.perRow);
+  $('aceExtra').value = c.aceExtra; $('cur').value = c.cur || '$'; $('perRow').value = String(c.perRow);
   $('valBox').hidden = c.mode === 'third' || c.mode === 'split'; $('splitBox').hidden = c.mode !== 'split';
   $('val').previousElementSibling.textContent = c.mode === 'pct' ? 'Top % paid' : 'Places paid';
   setVal('acePot', L().pots.ace || 0); setVal('ctpPot', L().pots.ctp || 0);
@@ -1082,7 +1084,7 @@ function renderForm(){
   document.querySelectorAll('[data-pane]').forEach(function(p){ p.hidden = p.dataset.pane !== t.tab; });
   var dn = Object.keys(groupBy(t.players, 'div'));
   $('addedBox').innerHTML = dn.length ? '<div class="grid2">' + dn.map(function(d){
-    return '<div class="field"><label>Added cash' + (d ? ' · ' + esc(d) : '') + ' $</label><input type="number" min="0" step="1" inputmode="decimal" data-added="' + esc(d) + '" value="' + esc(t.added[d] || '') + '"></div>' +
+    return '<div class="field"><label>Added cash' + (d ? ' · ' + esc(d) : '') + '</label><input type="number" min="0" step="1" inputmode="decimal" data-added="' + esc(d) + '" value="' + esc(t.added[d] || '') + '"></div>' +
       '<div class="field"><label>Ace buy-ins, players' + (d ? ' · ' + esc(d) : '') + ' (blank = all)</label><input type="number" min="0" step="1" inputmode="numeric" data-acebuy="' + esc(d) + '" value="' + esc(t.aceBuy[d] == null ? '' : t.aceBuy[d]) + '"></div>';
   }).join('') + '</div>' : '';
   $('exNote').hidden = !t.ex;
@@ -1118,7 +1120,7 @@ function b64u(bytes){ var s = ''; for(var i = 0; i < bytes.length; i++) s += Str
 function unb64u(str){ str = str.replace(/-/g, '+').replace(/_/g, '/'); while(str.length % 4) str += '='; var s = atob(str), b = new Uint8Array(s.length); for(var i = 0; i < s.length; i++) b[i] = s.charCodeAt(i); return b; }
 function playersLink(r){
   var tl = tagListAfter(r);
-  var o = {n: leagueName(), d: S.tonight.date, m: r.moves.map(function(m){ return [r.byId[m.id].name, m.tagIn, m.tagOut, m.score]; }),
+  var o = {n: leagueName(), d: S.tonight.date, u: L().cfg.cur || '$', m: r.moves.map(function(m){ return [r.byId[m.id].name, m.tagIn, m.tagOut, m.score]; }),
     p: r.money ? r.divs.map(function(d){ return [d.name, d.entries, d.pay.rows.filter(function(x){ return x.cents > 0; }).map(function(x){ return [r.byId[x.id].name, x.place, x.tied ? 1 : 0, x.cents, x.score]; })]; }) : [],
     a: r.money ? [r.ace.after, r.aceNames, r.ace.paidEach] : null, c: r.money ? [r.ctpNames, r.ctp.paidEach] : null,
     t: Object.keys(tl).map(Number).sort(function(a, b){ return a - b; }).map(function(n){ return [n, tl[n]]; })};
@@ -1325,7 +1327,7 @@ document.addEventListener('change', function(e){
     L().cfg.mode = t.value; renderAll(); return;
   }
   if(id === 'unit' || id === 'perRow'){ cfgSet(id, Number(t.value)); return; }
-  if(id === 'tie' || id === 'scoreUse' || id === 'dnf' || id === 'aceExtra'){
+  if(id === 'tie' || id === 'scoreUse' || id === 'dnf' || id === 'aceExtra' || id === 'cur'){
     L().cfg[id] = t.value;
     if(id === 'dnf') S.tonight.players.forEach(function(p){ if(p.score == null && !p.playsSet) p.plays = p.tag != null && t.value === 'last'; });
     renderAll(); return;
