@@ -1,0 +1,1382 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tag Night · bag tags and payouts for disc golf league night</title>
+<meta name="description" content="Paste your UDisc league results. Get bag tags reassigned, payouts per division, ace pot and CTP rolled over, and one picture for the group chat. Free, no sign-up, works on your phone.">
+<link rel="canonical" href="https://samsbench.com/discgolf-league/">
+<meta property="og:title" content="Tag Night · close out disc golf league night in a minute">
+<meta property="og:description" content="Paste tonight's UDisc results. Tags handed out, payouts split, ace pot rolled over. Free, no sign-up.">
+<meta property="og:url" content="https://samsbench.com/discgolf-league/">
+<meta property="og:image" content="https://samsbench.com/discgolf-league/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='6' y='14' width='52' height='36' rx='9' fill='%23c9ced2' stroke='%2317201b' stroke-width='4'/%3E%3Ccircle cx='16' cy='32' r='4' fill='%2317201b'/%3E%3Ctext x='38' y='42' font-family='Arial' font-weight='700' font-size='26' text-anchor='middle' fill='%2317201b'%3E1%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F2EEE4; --card:#FFFDF8; --ink:#17201B; --ink2:#3B463F; --line:#D6CEBD; --line2:#E7E1D3;
+  --green:#1E6A44; --green-bg:#E3F0E7; --orange:#D2480E; --orange-bg:#FBE7DC; --red:#B3261E;
+  --alu1:#EEF1F3; --alu2:#BFC6CB; --alu3:#8D969C;
+  --r:14px; --cond:'Barlow Condensed', 'Arial Narrow', Arial, sans-serif; --body:'Barlow', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 var(--body)}
+a{color:var(--green)}
+button,input,select,textarea{font:inherit;color:inherit}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+
+/* top */
+.top{display:flex;align-items:center;gap:12px;padding:14px 0}
+.brand{display:flex;align-items:center;gap:10px;font:800 22px/1 var(--cond);letter-spacing:.02em;text-transform:uppercase;text-decoration:none;color:var(--ink)}
+.top nav{margin-left:auto;display:flex;gap:16px;font-weight:600}
+.top nav a{color:var(--ink);text-decoration:none}
+
+/* bag tag object */
+.tag{--w:58px;position:relative;display:inline-flex;align-items:center;justify-content:flex-end;width:var(--w);height:calc(var(--w)*.62);padding-right:9px;border-radius:9px;
+  background:linear-gradient(160deg,var(--alu1),var(--alu2) 60%,var(--alu3));border:2px solid var(--ink);font:800 calc(var(--w)*.36)/1 var(--cond);color:var(--ink);flex:none;
+  box-shadow:inset 0 1px 0 #fff, 0 1px 0 rgba(0,0,0,.15)}
+.tag::before{content:"";position:absolute;left:8px;top:50%;width:9px;height:9px;margin-top:-4.5px;border-radius:50%;background:var(--paper);border:2px solid var(--ink)}
+.tag.big{--w:92px}
+.tag.none{background:var(--card);border-style:dashed;color:var(--ink2);font-size:13px;font-family:var(--body);font-weight:600;justify-content:center;padding:0 0 0 12px}
+.tag.gold{background:linear-gradient(160deg,#FFF4C9,#E8C252 60%,#B48A1E)}
+
+/* hero */
+.hero{display:grid;grid-template-columns:1.25fr 1fr;gap:28px;align-items:center;padding:18px 0 26px}
+.hero h1{font:800 clamp(38px,6vw,64px)/.95 var(--cond);text-transform:uppercase;margin:0 0 14px;letter-spacing:.005em}
+.hero h1 em{font-style:normal;color:var(--orange)}
+.hero p.lead{font-size:19px;margin:0 0 18px;max-width:34em}
+.cta{display:flex;flex-wrap:wrap;gap:10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:10px 18px;border-radius:12px;border:2px solid var(--ink);background:var(--card);font-weight:700;cursor:pointer;text-decoration:none;color:var(--ink)}
+.btn.primary{background:var(--orange);border-color:var(--orange);color:#fff}
+.btn.green{background:var(--green);border-color:var(--green);color:#fff}
+.btn.small{min-height:38px;padding:6px 12px;font-size:15px;border-width:1.5px}
+.btn:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid #2B6CB0;outline-offset:2px}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.facts{display:flex;flex-wrap:wrap;gap:8px 18px;margin:16px 0 0;padding:0;list-style:none;font-weight:600}
+.facts li::before{content:"✓ ";color:var(--green)}
+
+/* hero demo: tags moving */
+.demo{background:var(--card);border:2px solid var(--ink);border-radius:18px;padding:16px;box-shadow:6px 6px 0 var(--ink)}
+.demo h2{font:700 15px/1.2 var(--body);margin:0 0 10px}
+.demo .mv{display:grid;grid-template-columns:auto 1fr auto auto;gap:6px 10px;align-items:center}
+.demo .nm{font-weight:600}
+.demo .sc{font:700 18px/1 var(--cond)}
+.up{color:var(--green);font-weight:700}.down{color:var(--red);font-weight:700}
+.demo .cash{margin-top:12px;padding-top:10px;border-top:2px dashed var(--line);display:flex;justify-content:space-between;font-weight:700}
+
+/* layout */
+.work{display:grid;grid-template-columns:minmax(0,1fr) 420px;gap:24px;align-items:start;padding-bottom:40px}
+.panel{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:18px;margin-bottom:16px}
+.panel h2{display:flex;align-items:center;gap:12px;font:800 26px/1.1 var(--cond);text-transform:uppercase;margin:0 0 6px}
+.panel h2 .n{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--ink);color:var(--card);font-size:20px;flex:none}
+.panel > p.hint{margin:0 0 12px}
+.tabs{display:flex;gap:6px;margin:8px 0 10px;flex-wrap:wrap}
+.tabs button{border:1.5px solid var(--ink);background:var(--card);border-radius:999px;padding:6px 14px;font-weight:600;cursor:pointer}
+.tabs button[aria-pressed=true]{background:var(--ink);color:var(--card)}
+textarea{width:100%;min-height:130px;border:1.5px solid var(--line);border-radius:10px;padding:10px;background:#fff;font:14px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;resize:vertical}
+label{display:block;font-weight:600;margin:0 0 4px}
+input[type=text],input[type=number],input[type=date],select{width:100%;min-height:44px;border:1.5px solid var(--line);border-radius:10px;padding:8px 10px;background:#fff}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+.field{min-width:0}
+input,select{min-width:0;max-width:100%}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.field small{display:block;color:var(--ink2);margin-top:3px;font-size:14px}
+.drop{border:2px dashed var(--line);border-radius:12px;padding:16px;text-align:center;background:#fff}
+.drop.over{border-color:var(--orange);background:var(--orange-bg)}
+.msg{margin:10px 0 0;padding:10px 12px;border-radius:10px;font-weight:600}
+.msg.ok{background:var(--green-bg)}.msg.warn{background:var(--orange-bg)}.msg.err{background:#FADBD8;color:var(--red)}
+.ex{background:#FFF4C9;border:1.5px solid #E8C252;border-radius:10px;padding:8px 12px;font-weight:600;margin:0 0 12px}
+
+/* players table */
+.ptable{width:100%;border-collapse:collapse;margin-top:12px;font-size:15px}
+.ptable th{text-align:left;font-weight:700;border-bottom:2px solid var(--ink);padding:6px 6px}
+.ptable td{border-bottom:1px solid var(--line2);padding:6px;vertical-align:middle}
+.ptable input.tagin{width:64px;min-height:38px}
+.ptable td small{font-size:13px}
+.ptable input[type=checkbox]{width:20px;height:20px}
+.ptable .num{font:700 18px/1 var(--cond)}
+.ptable tr.dnf td{color:var(--ink2)}
+.chk{display:inline-flex;align-items:center;gap:6px;font-weight:500;margin:0}
+.chk input{width:20px;height:20px}
+.tie{margin-top:12px;padding:12px;border:1.5px solid var(--ink);border-radius:12px;background:#fff}
+.tie ol{margin:6px 0 0;padding-left:22px}
+.tie li{display:flex;align-items:center;gap:8px;margin:4px 0}
+details.more{margin-top:12px}
+details.more summary{cursor:pointer;font-weight:700}
+
+/* sheet (right) */
+.side{position:sticky;top:12px}
+.sheet{background:#fff;border:2px solid var(--ink);border-radius:16px;overflow:hidden;box-shadow:6px 6px 0 var(--ink)}
+.sheet header{background:var(--ink);color:var(--card);padding:14px 16px}
+.sheet header b{display:block;font:800 26px/1 var(--cond);text-transform:uppercase}
+.sheet header span{font-weight:500}
+.sheet section{padding:12px 16px;border-bottom:2px dashed var(--line)}
+.sheet section:last-child{border-bottom:0}
+.sheet h3{font:800 18px/1.1 var(--cond);text-transform:uppercase;margin:0 0 8px;display:flex;justify-content:space-between;gap:8px}
+.sheet h3 span{font:600 14px/1.3 var(--body);text-transform:none}
+.mvrow{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:3px 0}
+.mvrow .who{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mvrow .d{font-weight:700;font-size:14px;white-space:nowrap}
+.payrow{display:grid;grid-template-columns:44px 1fr auto;gap:8px;padding:3px 0;align-items:baseline}
+.payrow .pl{font:700 16px/1 var(--cond)}
+.payrow .amt{font:800 20px/1 var(--cond);color:var(--green)}
+.env{display:grid;grid-template-columns:1fr auto;gap:2px 12px;font-size:15px}
+.env .t{font-weight:700;border-top:1.5px solid var(--ink);padding-top:4px;margin-top:4px}
+.env .ok{color:var(--green);font-weight:700}
+.env .bad{color:var(--red);font-weight:700}
+.empty{padding:22px 16px;font-weight:600}
+.empty .tag{margin-right:8px;vertical-align:middle}
+.acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 16px;background:var(--paper);border-top:2px solid var(--ink)}
+.acts .btn{width:100%}
+.acts .wide{grid-column:1/-1}
+
+/* history + pro */
+.hist{list-style:none;margin:0;padding:0}
+.hist li{border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;margin:8px 0;background:#fff}
+.hist li b{font:800 18px/1.1 var(--cond);text-transform:uppercase}
+.lock{border:2px solid var(--ink);border-radius:12px;padding:12px;background:#FFF4C9;margin-top:10px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:10px}
+.stat{border:1.5px solid var(--line);border-radius:12px;padding:10px;background:#fff}
+.stat b{display:block;font:800 24px/1 var(--cond)}
+.pro{background:var(--ink);color:var(--card);border-radius:18px;padding:22px;margin:8px 0 26px}
+.pro h2{font:800 34px/1 var(--cond);text-transform:uppercase;margin:0 0 8px}
+.pro ul{margin:8px 0 14px;padding-left:20px}
+.pro .price{font:800 44px/1 var(--cond);color:#FFD27A}
+.pro input{background:#fff;color:var(--ink)}
+.pro .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.pro .row input{flex:1;min-width:200px}
+.pro .btn{border-color:var(--card)}
+.faq h2{font:800 30px/1 var(--cond);text-transform:uppercase}
+.faq details{border-bottom:1.5px solid var(--line);padding:10px 0}
+.faq summary{font-weight:700;cursor:pointer}
+footer{padding:20px 0 90px;font-size:15px}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--card);padding:10px 16px;border-radius:10px;font-weight:600;z-index:20;max-width:90vw}
+.mbar{display:none}
+
+/* shared view */
+body.shared .work > .main, body.shared .hero, body.shared .pro, body.shared .faq, body.shared #histPanel{display:none}
+body.shared .work{grid-template-columns:minmax(0,560px);justify-content:center}
+.sharedTop{display:none}
+body.shared .sharedTop{display:block;max-width:560px;margin:10px auto 16px}
+
+@media (max-width:900px){
+  .hero{grid-template-columns:1fr}
+  .work{grid-template-columns:minmax(0,1fr)}
+  .side{position:static}
+  .mbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--ink);color:var(--card);padding:10px 16px;gap:10px;align-items:center;justify-content:space-between}
+  .mbar b{font:800 18px/1.1 var(--cond);text-transform:uppercase}
+  .mbar .btn{min-height:40px;padding:6px 14px;border-color:var(--card);background:var(--card);color:var(--ink)}
+  body.shared .mbar{display:none}
+}
+@media (max-width:560px){
+  .grid3{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .top nav a.hide-s{display:none}
+  .ptable td,.ptable th{padding:5px 3px}
+  .ptable input.tagin{width:54px}
+  .hero p.lead{font-size:17px}
+}
+@media print{
+  .top,.hero,.main,.pro,.faq,footer,.acts,.mbar,#histPanel{display:none!important}
+  .work{display:block}.sheet{box-shadow:none}
+  body{background:#fff}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="brand" href="./"><span class="tag" style="--w:44px" aria-hidden="true">1</span>Tag Night</a>
+    <nav><a href="#tool">Close out tonight</a><a class="hide-s" href="#pro">Pro</a><a class="hide-s" href="#faq">FAQ</a></nav>
+  </div>
+
+  <div class="sharedTop" id="sharedTop"></div>
+
+  <section class="hero">
+    <div>
+      <h1>Hand out the tags and the cash <em>before the parking lot empties.</em></h1>
+      <p class="lead">Paste tonight’s UDisc results. Tag Night swaps the bag tags, splits the payouts for every division, rolls the ace pot and CTP over, and checks the envelope adds up. One picture for the group chat.</p>
+      <div class="cta">
+        <a class="btn primary" href="#tool" id="goTool">Paste tonight’s results</a>
+        <button class="btn" type="button" id="tryEx">See it with an example league</button>
+      </div>
+      <ul class="facts"><li>Free, no sign-up</li><li>Your players keep using UDisc</li><li>Works on your phone</li></ul>
+    </div>
+    <div class="demo" aria-label="Example: four tags change hands">
+      <h2>Thursday tags · 4 tags in play</h2>
+      <div class="mv">
+        <span class="tag gold">1</span><span class="nm">Jess Park</span><span class="sc">49</span><span class="up">↑ from 11</span>
+        <span class="tag">3</span><span class="nm">Ray Ortiz</span><span class="sc">52</span><span class="down">↓ from 1</span>
+        <span class="tag">7</span><span class="nm">Mike Dunn</span><span class="sc">52</span><span class="down">↓ from 3</span>
+        <span class="tag">11</span><span class="nm">Tom Becker</span><span class="sc">55</span><span class="down">↓ from 7</span>
+      </div>
+      <div class="cash"><span>Ace pot rolls to next week</span><span>$57</span></div>
+    </div>
+  </section>
+
+  <div class="work" id="tool">
+    <div class="main">
+      <div class="ex" id="exNote" hidden>You’re looking at an example league. <button class="btn small" type="button" id="clearEx">Clear it and use mine</button></div>
+
+      <section class="panel" id="p1">
+        <h2><span class="n">1</span>Tonight’s scores</h2>
+        <div class="grid3" style="margin:4px 0 12px">
+          <div class="field"><label for="lgName">League name</label><input type="text" id="lgName" placeholder="Thursday Tags"></div>
+          <div class="field"><label for="date">Night of</label><input type="date" id="date"></div>
+          <div class="field"><label for="lgSel">League</label><select id="lgSel"></select></div>
+        </div>
+        <p class="hint">From UDisc: Event tools → Leaderboard → Actions → Export. Upload that file, or open it and copy the cells in here.</p>
+        <div class="tabs" role="group" aria-label="How to add scores">
+          <button type="button" data-tab="file" aria-pressed="true">UDisc file</button>
+          <button type="button" data-tab="paste" aria-pressed="false">Paste</button>
+          <button type="button" data-tab="type" aria-pressed="false">Type them</button>
+        </div>
+        <div data-pane="file">
+          <div class="drop" id="drop">
+            <p style="margin:0 0 8px;font-weight:600">Drop the .xlsx or .csv here</p>
+            <label class="btn small" style="display:inline-flex;margin:0">Choose file<input type="file" id="file" accept=".xlsx,.csv,.txt,.tsv" hidden></label>
+          </div>
+        </div>
+        <div data-pane="paste" hidden>
+          <label for="paste">Paste the leaderboard (with its header row)</label>
+          <textarea id="paste" placeholder="Division	Position	Name	…	Total Score&#10;Open	1	Jess Park	…	49"></textarea>
+        </div>
+        <div data-pane="type" hidden>
+          <label for="typed">One player per line: name, score, then # and their tag if they brought one</label>
+          <textarea id="typed" placeholder="Jess Park 49 #11&#10;Ray Ortiz 52 #1&#10;Ana Lima 50"></textarea>
+        </div>
+        <div id="parseMsg"></div>
+        <div id="colBox"></div>
+        <div id="players"></div>
+      </section>
+
+      <section class="panel" id="p2">
+        <h2><span class="n">2</span>Who holds which tag</h2>
+        <p class="hint">Your tag list carries over week to week. Players match by name or UDisc username. Fix one by typing its number in the table above.</p>
+        <details id="rosterBox">
+          <summary class="btn small" style="display:inline-block">Edit the tag list · <span id="rosterCount">0</span> tags</summary>
+          <div style="margin-top:10px">
+            <label for="roster">One tag per line: number, then name</label>
+            <textarea id="roster" placeholder="1 Ray Ortiz&#10;2 Sam Wu&#10;3 Mike Dunn"></textarea>
+            <div id="rosterMsg"></div>
+          </div>
+        </details>
+        <div class="grid3" style="margin-top:12px">
+          <div class="field"><label for="tie">Tie for a tag</label>
+            <select id="tie"><option value="lowtag">Lower tag wins</option><option value="manual">We play it off</option></select></div>
+          <div class="field"><label for="dnf">A tag player DNFs</label>
+            <select id="dnf"><option value="keep">Keeps their tag</option><option value="last">Drops to the bottom</option></select></div>
+          <div class="field"><label for="scoreUse">Tags go by</label>
+            <select id="scoreUse"><option value="all">All divisions together</option><option value="div">Each division</option></select></div>
+        </div>
+        <div id="ties"></div>
+      </section>
+
+      <section class="panel" id="p3">
+        <h2><span class="n">3</span>Money</h2>
+        <p class="hint">Per player, per night. Leave a box empty if your league doesn’t do it.</p>
+        <div class="grid3">
+          <div class="field"><label for="fee">Entry $</label><input type="number" id="fee" inputmode="decimal" min="0" step="1" placeholder="10"></div>
+          <div class="field"><label for="ace">Ace pot $</label><input type="number" id="ace" inputmode="decimal" min="0" step="0.5" placeholder="1"></div>
+          <div class="field"><label for="aceExtra">Ace pot money is</label>
+            <select id="aceExtra"><option value="in">Part of the entry</option><option value="extra">Paid on top</option></select></div>
+          <div class="field"><label for="ctp">Of the entry, to CTP $</label><input type="number" id="ctp" inputmode="decimal" min="0" step="0.5" placeholder="0"></div>
+          <div class="field"><label for="club">Of the entry, to club $</label><input type="number" id="club" inputmode="decimal" min="0" step="0.5" placeholder="0"></div>
+          <div class="field"><label for="perRow">Each row in the results is</label>
+            <select id="perRow"><option value="1">One player</option><option value="2">A doubles team (2 entries)</option></select></div>
+          <div class="field"><label for="mode">Who gets paid</label>
+            <select id="mode"><option value="third">Top third</option><option value="pct">Top % of field</option><option value="fixed">Fixed # of places</option><option value="split">Our own split (Pro)</option></select></div>
+          <div class="field" id="valBox"><label for="val">How many</label><input type="number" id="val" inputmode="numeric" min="1" step="1"></div>
+          <div class="field" id="splitBox"><label for="split">Our split, % per place</label><input type="text" id="split" placeholder="50 30 20"></div>
+          <div class="field"><label for="unit">Round payouts to</label>
+            <select id="unit"><option value="100">Whole dollars</option><option value="500">$5 bills</option><option value="1">Exact cents</option></select></div>
+          <div class="field"><label for="acePot">Ace pot coming in $</label><input type="number" id="acePot" inputmode="decimal" min="0" step="1"></div>
+          <div class="field"><label for="ctpPot">CTP carried over $</label><input type="number" id="ctpPot" inputmode="decimal" min="0" step="1"></div>
+        </div>
+        <div class="grid3" style="margin-top:12px">
+          <div class="field"><label for="aces">Aces tonight</label><input type="text" id="aces" placeholder="Names, comma separated" list="plist"></div>
+          <div class="field"><label for="ctpWin">CTP winners</label><input type="text" id="ctpWin" placeholder="Names, comma separated" list="plist"></div>
+          <div class="field"><label for="counted">Cash you counted $</label><input type="number" id="counted" inputmode="decimal" min="0" step="1" placeholder="optional"></div>
+        </div>
+        <datalist id="plist"></datalist>
+        <details class="more">
+          <summary>Ace pot rule, added cash, ace buy-ins</summary>
+          <div class="grid2" style="margin-top:10px">
+            <div class="field"><label for="acePct">An ace wins this % of the pot</label><input type="number" id="acePct" inputmode="numeric" min="0" max="100" step="5" placeholder="100"></div>
+            <div class="field"><label for="aceCap">Most one ace night pays $</label><input type="number" id="aceCap" inputmode="decimal" min="0" step="5" placeholder="no limit"></div>
+          </div>
+          <div id="addedBox" style="margin-top:10px"></div>
+          <p style="margin:10px 0 0">How places split: with 3 paid, 1st gets 3 shares, 2nd 2, 3rd 1 (50% / 33% / 17%). Tied players share the money of the places they tie for and get the same amount. Rounding hands whole bills to whoever is most short of their exact share; any change that can’t be split goes into the ace pot.</p>
+        </details>
+      </section>
+
+      <section class="panel" id="histPanel">
+        <h2>Season so far</h2>
+        <div id="hist"></div>
+      </section>
+    </div>
+
+    <aside class="side">
+      <div class="sheet" id="sheet" aria-live="polite"></div>
+    </aside>
+  </div>
+
+  <section class="pro" id="pro"></section>
+
+  <section class="faq" id="faq">
+    <h2>Questions league directors ask</h2>
+    <details><summary>Do my players have to download anything?</summary><p>No. Everyone keeps scoring in UDisc like they do now. Only you open Tag Night, after the round, with the exported leaderboard.</p></details>
+    <details><summary>How do I get the file out of UDisc?</summary><p>In your league or event: Event tools → Leaderboard → Actions → Export. Upload that file in step 1. If your phone won’t open it here, open it in Sheets or Excel, select the whole table, copy, and paste it into the Paste tab.</p></details>
+    <details><summary>UDisc says everyone is unpaid. Does that matter?</summary><p>No. Most leagues take cash at the tee and never tick “paid” in UDisc, so Tag Night counts everyone as paid. Untick anyone who didn’t pay in the table.</p></details>
+    <details><summary>Who plays for tags?</summary><p>Anyone on your tag list who finished tonight. If someone left their tag at home, untick “Playing for a tag” next to their name and their tag stays put. The best score among tag players takes the lowest tag in play, and so on down. Tags of people who didn’t play never move.</p></details>
+    <details><summary>What about casual rounds where two people swap tags?</summary><p>Use the Type tab: enter just those players with their scores and tags (like “Ray 50 #1”), then lock it in. It updates the same tag list.</p></details>
+    <details><summary>How are ties handled?</summary><p>For tags, you pick: the lower tag coming in wins, or you play it off and set the order. For money, tied players share the payouts of the places they tie for, like PDGA events do.</p></details>
+    <details><summary>Where is my data? What if I lose it?</summary><p>On this phone or computer only. Nothing is uploaded. Some phones clear website data after a week without a visit, so after each lock-in save the backup file (free) or copy the tag list. The players’ link carries tonight’s results and the tag list inside the link itself.</p></details>
+  </section>
+
+  <footer>Tag Night is a small independent tool made by Sam. Not affiliated with UDisc or the PDGA.</footer>
+</div>
+
+<div class="mbar" id="mbar"><b id="mbarText">Tonight’s sheet</b><a class="btn" href="#sheet">See sheet</a></div>
+
+<script>
+/*CORE*/
+var TN = (function(){
+  'use strict';
+
+  /* ---------- parsing ---------- */
+  function splitCSVLine(line, d){
+    var out = [], cur = '', q = false;
+    for(var i = 0; i < line.length; i++){
+      var c = line[i];
+      if(q){
+        if(c === '"'){ if(line[i+1] === '"'){ cur += '"'; i++; } else q = false; }
+        else cur += c;
+      } else if(c === '"' && cur.trim() === '') { q = true; cur = ''; }
+      else if(c === d){ out.push(cur); cur = ''; }
+      else cur += c;
+    }
+    out.push(cur);
+    return out.map(function(s){ return s.trim(); });
+  }
+  function rowsFromText(text){
+    var lines = String(text || '').replace(/\r\n?/g, '\n').split('\n').filter(function(l){ return l.trim() !== ''; });
+    if(!lines.length) return {rows: [], delim: ''};
+    var half = Math.ceil(lines.length / 2);
+    function many(ch){ return lines.filter(function(l){ return l.indexOf(ch) >= 0; }).length >= half; }
+    var delim = lines.some(function(l){ return l.indexOf('\t') >= 0; }) ? '\t' : many(';') ? ';' : many(',') ? ',' : '';
+    return {rows: delim ? lines.map(function(l){ return splitCSVLine(l, delim); }) : lines.map(function(l){ return [l.trim()]; }), delim: delim};
+  }
+  function norm(s){ return String(s == null ? '' : s).toLowerCase().replace(/\s+/g, ' ').trim(); }
+  function isNameHeader(x){ return x === 'name' || x === 'player' || x === 'player name' || x === 'team' || x === 'team name' || x === 'golfer'; }
+  function findHeader(rows){
+    for(var i = 0; i < Math.min(rows.length, 5); i++){
+      var h = rows[i].map(norm);
+      if(h.some(isNameHeader) && h.some(function(x){ return /score|total|rel|strokes|\+\/-|^par$/.test(x); })) return i;
+    }
+    return -1;
+  }
+  function colIndex(h, tests){
+    for(var t = 0; t < tests.length; t++) for(var i = 0; i < h.length; i++) if(tests[t](h[i])) return i;
+    return -1;
+  }
+  function toInt(s){
+    var t = String(s == null ? '' : s).trim();
+    if(/^e$/i.test(t)) return 0;
+    if(!/^[+-]?\d+(\.\d+)?$/.test(t)) return null;
+    return Number(t);
+  }
+  function tagFrom(s){ var m = String(s == null ? '' : s).trim().match(/^#?\s*(\d{1,4})$/); return m ? Number(m[1]) : null; }
+  var UNPAID = /^(no|not paid|unpaid|false|0|n)$/i;
+
+  /* parseScores(rowsOrText, prefCol)
+     Returns {players:[{name,user,div,score,tag,paidMark,rel,missingRound}], kind, scoreCol, scoreCols:[header names that hold scores], skipped:[{line, why}], warn:[]} */
+  function parseScores(input, prefCol){
+    var rows = Array.isArray(input) ? input : rowsFromText(input).rows;
+    var out = {players: [], scoreCol: '', scoreCols: [], kind: '', skipped: [], warn: []};
+    if(!rows.length) return out;
+    var hi = findHeader(rows);
+    if(hi >= 0){
+      var raw = rows[hi], h = raw.map(norm);
+      var cName = colIndex(h, [isNameHeader, function(x){ return /name|player/.test(x) && !/user/.test(x); }]);
+      var cUser = colIndex(h, [function(x){ return x === 'username'; }]);
+      var cDiv = colIndex(h, [function(x){ return x === 'division'; }, function(x){ return /^div/.test(x); }]);
+      var cTag = colIndex(h, [function(x){ return /^(bag )?tag( #| number|#)?$/.test(x); }]);
+      var cPaid = colIndex(h, [function(x){ return x === 'paid status' || x === 'paid'; }]);
+      /* every column that looks like a score: total score, relative, handicap, net … (not position, rating, pdga, hole-by-hole) */
+      var cand = [];
+      h.forEach(function(x, i){
+        if(i === cName || i === cUser || i === cDiv || i === cTag || i === cPaid) return;
+        if(/position|rating|pdga|hole|start|check|paid|^#$|tag/.test(x)) return;
+        if(/score|total|net|handicap|adjusted|rel|strokes|\+\/-|^par$/.test(x)) cand.push(i);
+      });
+      out.scoreCols = cand.map(function(i){ return raw[i]; });
+      var cScore = -1;
+      if(prefCol){ cScore = h.indexOf(norm(prefCol)); }
+      if(cScore < 0) cScore = colIndex(h, [function(x){ return x === 'total score'; }, function(x){ return x === 'total' || x === 'score' || x === 'strokes'; }, function(x){ return /^total score/.test(x); }]);
+      if(cScore < 0) cScore = colIndex(h, [function(x){ return /^relative score/.test(x); }, function(x){ return x === 'rel' || x === '+/-' || x === 'par'; }]);
+      var rel = cScore >= 0 && /rel|\+\/-|^par$/.test(h[cScore]);
+      var rounds = []; h.forEach(function(x, i){ if(/^total score \(round \d+\)$/.test(x)) rounds.push(i); });
+      out.kind = 'table'; out.scoreCol = cScore >= 0 ? raw[cScore] : '';
+      if(cScore < 0) out.warn.push('No score column found.');
+      for(var r = hi + 1; r < rows.length; r++){
+        var row = rows[r], name = cName >= 0 ? String(row[cName] || '').trim() : '';
+        if(!name){ if(row.join('').trim()) out.skipped.push({line: row.join(' '), why: 'no name'}); continue; }
+        var sc = cScore >= 0 ? toInt(row[cScore]) : null;
+        var missing = rounds.length > 1 && rounds.some(function(i){ return String(row[i] == null ? '' : row[i]).trim() === ''; });
+        out.players.push({name: name, user: cUser >= 0 ? String(row[cUser] || '').trim() : '', div: cDiv >= 0 ? String(row[cDiv] || '').trim() : '',
+          score: missing ? null : sc, tag: cTag >= 0 ? tagFrom(row[cTag]) : null,
+          paidMark: cPaid >= 0 ? !UNPAID.test(String(row[cPaid] || '').trim()) : null, rel: rel, missingRound: missing});
+      }
+      var nMiss = out.players.filter(function(p){ return p.missingRound; }).length;
+      if(nMiss) out.warn.push(nMiss + ' player(s) are missing a round, so they don’t place tonight.');
+      return out;
+    }
+    /* Free typing: "Ray Smith 52 #1", "Ray Smith, 52", "#1 Ray 52". Last plain number = score, "#n" = tag, rest = name.
+       Two plain numbers at the end ("Jo 52 3") are ambiguous: skipped with a reason rather than guessed. */
+    out.kind = 'typed';
+    rows.forEach(function(row){
+      var line = row.join(' ').trim(), toks = line.split(/\s+/), tag = null, score = null, nameToks = [], bad = '';
+      var lead = toks[0] && /^#\d{1,4}$/.test(toks[0]) ? Number(toks.shift().slice(1)) : null;
+      var tail = [];
+      if(toks.length > 1 && /^[eE]$/.test(toks[toks.length - 1])) tail.unshift(toks.pop());   /* "E" = even par, only as the last word */
+      while(toks.length && /^#?[+-]?\d{1,4},?$/.test(toks[toks.length - 1])) tail.unshift(toks.pop().replace(/,$/, ''));
+      nameToks = toks;
+      var tags = tail.filter(function(t){ return t[0] === '#'; }), nums = tail.filter(function(t){ return t[0] !== '#'; });
+      if(lead != null) tags.push('#' + lead);
+      if(tags.length > 1) bad = 'two tags';
+      else if(nums.length > 1) bad = 'two numbers: put # before the tag, like “52 #3”';
+      else {
+        if(tags.length) tag = Number(tags[0].slice(1));
+        if(nums.length) score = /^e$/i.test(nums[0]) ? 0 : Number(nums[0]);
+      }
+      var name = nameToks.join(' ').replace(/[,;:\-–]+$/, '').trim();
+      if(!name){ out.skipped.push({line: line, why: 'no name'}); return; }
+      if(bad){ out.skipped.push({line: line, why: bad}); return; }
+      out.players.push({name: name, user: '', div: '', score: score, tag: tag, paidMark: null, rel: score != null && (score < 18 || /^[+-]/.test(nums[0] || '')), missingRound: false});
+    });
+    var sc = out.players.filter(function(p){ return p.score != null; }).map(function(p){ return p.score; });
+    if(sc.some(function(s){ return s < 18; }) && sc.some(function(s){ return s >= 18; })) out.warn.push('Some scores look like +/− par and others like total throws. Use one kind for everyone.');
+    return out;
+  }
+
+  /* ---------- names + roster ---------- */
+  function key(s){
+    var t = String(s == null ? '' : s);
+    try{ t = t.normalize('NFKD').replace(/[̀-ͯ]/g, ''); }catch(e){}
+    t = t.toLowerCase();
+    try{ t = t.replace(/[^\p{L}\p{N} ]+/gu, ' '); }catch(e){ t = t.replace(/[^a-z0-9À-￿ ]+/g, ' '); }
+    return t.replace(/\s+/g, ' ').trim();
+  }
+  /* roster: {tagNumber: name}. All tags this player holds (by name or UDisc username). */
+  function tagsOf(roster, name, user){
+    var k = key(name), u = key(user), res = [];
+    Object.keys(roster).forEach(function(t){
+      var rk = key(roster[t]);
+      if(rk && (rk === k || (u && rk === u))) res.push(Number(t));
+    });
+    return res.sort(function(a, b){ return a - b; });
+  }
+  function tagOf(roster, name, user){ var t = tagsOf(roster, name, user); return t.length ? t[0] : null; }
+  /* "Mike D." vs "Mike Dunn": same first word and the other's last word starts with this one's last initial. */
+  function suggest(roster, name, taken){
+    var k = key(name).split(' '); if(!k[0]) return [];
+    var out = [];
+    Object.keys(roster).forEach(function(t){
+      if(taken && taken[t]) return;
+      var r = key(roster[t]).split(' ');
+      if(!r[0] || r.join(' ') === k.join(' ')) return;
+      var sameFirst = r[0] === k[0] || (r[0].length > 2 && k[0].length > 2 && (r[0].indexOf(k[0]) === 0 || k[0].indexOf(r[0]) === 0));
+      var lastOk = k.length < 2 || r.length < 2 || r[r.length - 1][0] === k[k.length - 1][0];
+      var sameLast = k.length > 1 && r.length > 1 && r[r.length - 1] === k[k.length - 1] && r[0][0] === k[0][0];
+      if((sameFirst && lastOk) || sameLast) out.push(Number(t));
+    });
+    return out;
+  }
+  function parseRoster(text){
+    var res = {}, bad = [], dup = [];
+    String(text || '').split(/\r?\n/).forEach(function(l){
+      var s = l.trim(); if(!s) return;
+      var num = null, nm = '', m;
+      if((m = s.match(/^#?\s*(\d{1,4})\s*[.):,\t-]?\s+(.+)$/)) || (m = s.match(/^#?\s*(\d{1,4})\s*[.):,\t-]\s*(.+)$/))){ num = Number(m[1]); nm = m[2]; }
+      else if((m = s.match(/^(.+?)[\s,\t]+[-–]?\s*#\s*(\d{1,4})$/)) || (m = s.match(/^(.+?)[,\t]\s*(\d{1,4})$/))){ num = Number(m[2]); nm = m[1]; }
+      nm = String(nm).replace(/[\s,;:\-–]+$/, '').trim();
+      if(!(num > 0) || !nm){ bad.push(s); return; }
+      if(res[num] != null && key(res[num]) !== key(nm)) dup.push(num);
+      res[num] = nm;
+    });
+    return {roster: res, bad: bad, dup: dup};
+  }
+
+  /* ---------- tags ----------
+     players: [{id, score, tagIn}] — those playing FOR tags. Best (lowest) score takes the lowest tag in play.
+     Ties: 'lowtag' = lower tag coming in wins; 'manual' = order[] (ids, best first).
+     dnf: 'keep' = players without a score sit out; 'last' = they play and finish behind everyone (lower tag first). */
+  function assignTags(players, tie, order, dnf){
+    var ps = players.filter(function(p){ return p.tagIn != null && (p.score != null || dnf === 'last'); }).slice();
+    var rank = {}; (order || []).forEach(function(id, i){ rank[id] = i; });
+    function sc(p){ return p.score == null ? Infinity : p.score; }
+    ps.sort(function(a, b){
+      if(sc(a) !== sc(b)) return sc(a) - sc(b);
+      if(tie === 'manual' && a.score != null && rank[a.id] != null && rank[b.id] != null && rank[a.id] !== rank[b.id]) return rank[a.id] - rank[b.id];
+      return a.tagIn - b.tagIn;
+    });
+    var tags = ps.map(function(p){ return p.tagIn; }).sort(function(a, b){ return a - b; });
+    return ps.map(function(p, i){ return {id: p.id, score: p.score, tagIn: p.tagIn, tagOut: ps.length < 2 ? p.tagIn : tags[i]}; });
+  }
+  function tieGroups(players){
+    var by = {};
+    players.forEach(function(p){ if(p.tagIn != null && p.score != null){ (by[p.score] = by[p.score] || []).push(p.id); } });
+    return Object.keys(by).filter(function(s){ return by[s].length > 1; }).map(function(s){ return {score: Number(s), ids: by[s]}; });
+  }
+  /* Apply a night to the roster. Only tags in play move; every other line stays as it was. */
+  function applyMoves(roster, moves){
+    var r = {}; Object.keys(roster).forEach(function(k){ r[k] = roster[k]; });
+    var names = {}; moves.forEach(function(m){ names[m.tagIn] = m.name; });
+    moves.forEach(function(m){ delete r[m.tagIn]; });
+    moves.forEach(function(m){ r[m.tagOut] = m.name; });
+    return r;
+  }
+
+  /* ---------- money (all in cents) ---------- */
+  function placesPaid(field, finishers, mode, val){
+    var k;
+    if(mode === 'fixed') k = Math.round(val);
+    else if(mode === 'pct') k = Math.ceil(field * (val / 100) - 1e-9);
+    else k = Math.ceil(field / 3 - 1e-9);
+    return Math.max(0, Math.min(k, finishers));
+  }
+  function shareWeights(k){ var w = []; for(var p = 1; p <= k; p++) w.push(k - p + 1); return w; }
+  function parseSplit(s){
+    var w = String(s || '').split(/[\s,\/;]+/).map(Number).filter(function(x){ return isFinite(x) && x > 0; });
+    return w.length ? w : null;
+  }
+  /* payouts(finishers, pool, k, unit, weights)
+     Shares: place p of k gets k-p+1 shares, or `weights` (a custom split like [50,30,20]; then k = its length).
+     Tied players split the money of the places they cover and always get the same amount.
+     Rounding: everyone rounded down to the unit, then whole units go one at a time to the place most short of its exact share
+     (never letting a lower place pass a higher one; tied players get units together or not at all). Whatever can't be handed out in whole units is `change` (the page adds it to the ace pot).
+     Returns {rows:[{id, score, place, tied, cents}], k, pool, change}. sum(cents) + change === pool. */
+  function payouts(finishers, pool, k, unit, weights){
+    var fs = finishers.filter(function(f){ return f.score != null; }).slice().sort(function(a, b){ return a.score - b.score; });
+    unit = unit > 0 ? unit : 1;
+    var w;
+    if(weights && weights.length){ k = Math.min(weights.length, fs.length); w = weights.slice(0, k); }
+    else { k = Math.max(0, Math.min(k, fs.length)); w = shareWeights(k); }
+    var wsum = 0; w.forEach(function(x){ wsum += x; });
+    var exact = [];
+    for(var p = 0; p < fs.length; p++) exact.push(p < k && wsum > 0 ? pool * w[p] / wsum : 0);
+    var groups = [], rows = [], i = 0;
+    while(i < fs.length){
+      var j = i; while(j + 1 < fs.length && fs[j + 1].score === fs[i].score) j++;
+      var sum = 0; for(var q = i; q <= j; q++) sum += exact[q];
+      var g = {place: i + 1, m: j - i + 1, each: sum / (j - i + 1), amt: 0, rows: []};
+      for(q = i; q <= j; q++){ var row = {id: fs[q].id, score: fs[q].score, place: i + 1, tied: j > i, cents: 0}; rows.push(row); g.rows.push(row); }
+      groups.push(g); i = j + 1;
+    }
+    if(k <= 0 || pool <= 0) return {rows: rows, k: Math.max(k, 0), pool: pool, change: Math.max(pool, 0)};
+    var left = pool;
+    groups.forEach(function(g){ g.amt = Math.floor(g.each / unit + 1e-9) * unit; left -= g.amt * g.m; });
+    function canGive(gi){
+      var g = groups[gi], after = g.amt + unit;
+      if(g.each <= 0 || left < g.m * unit) return false;
+      for(var a = 0; a < gi; a++) if(groups[a].amt < after) return false;   /* a lower place may not pass a higher one */
+      return true;
+    }
+    /* hand out whole units one at a time to the place that is most short of its exact share (ties: higher place first) */
+    for(;;){
+      var best = -1;
+      for(var gi = 0; gi < groups.length; gi++) if(canGive(gi) && (best < 0 || groups[gi].amt - groups[gi].each < groups[best].amt - groups[best].each - 1e-9)) best = gi;
+      if(best < 0) break;
+      groups[best].amt += unit; left -= groups[best].m * unit;
+    }
+    groups.forEach(function(g){ g.rows.forEach(function(r){ r.cents = g.amt; }); });
+    return {rows: rows, k: k, pool: pool, change: left};
+  }
+  function splitPot(cents, n, unit){
+    if(n <= 0 || cents <= 0) return {each: [], kept: Math.max(cents, 0)};
+    unit = unit > 0 ? unit : 1;
+    var each = Math.floor(cents / n / unit + 1e-9) * unit, arr = [];
+    for(var i = 0; i < n; i++) arr.push(each);
+    return {each: arr, kept: cents - each * n};
+  }
+  /* night(cfg, divs, pots, aces, ctpWinners)
+     cfg: {fee, ace, ctp, club (cents per entry), aceExtra (ace is paid on top of the entry), mode, val, split:[..] or null, unit, aceRule:{pct, cap}}
+     divs: [{name, entries, finishers:[{id,score}], added (cents), aceBuyins (count or null = entries)}]
+     Rounding change and the pool of a division with nobody to pay go into the ace pot. */
+  function night(cfg, divs, pots, aces, ctpWinners){
+    var res = {divs: [], in: 0, out: 0, club: 0, aceIn: 0, ctpIn: 0, change: 0, ace: null, ctp: null};
+    divs.forEach(function(d){
+      var buy = d.aceBuyins == null ? d.entries : Math.max(0, Math.min(Math.round(d.aceBuyins), d.entries));
+      var pool = d.entries * (cfg.fee - cfg.ctp - cfg.club) - (cfg.aceExtra ? 0 : buy * cfg.ace) + (d.added || 0);
+      pool = Math.max(0, pool);
+      var fin = d.finishers.filter(function(f){ return f.score != null; }).length;
+      var k = cfg.split && cfg.split.length ? Math.min(cfg.split.length, fin) : placesPaid(d.entries, fin, cfg.mode, cfg.val);
+      var pay = payouts(d.finishers, pool, k, cfg.unit, cfg.split);
+      res.divs.push({name: d.name, entries: d.entries, pool: pool, k: pay.k, pay: pay, buy: buy});
+      res.in += d.entries * cfg.fee + (cfg.aceExtra ? buy * cfg.ace : 0) + (d.added || 0);
+      res.club += d.entries * cfg.club;
+      res.aceIn += buy * cfg.ace;
+      res.ctpIn += d.entries * cfg.ctp;
+      res.change += pay.change;
+      pay.rows.forEach(function(r){ res.out += r.cents; });
+    });
+    var acePot = (pots.ace || 0) + res.aceIn;
+    var pct = cfg.aceRule && cfg.aceRule.pct != null ? cfg.aceRule.pct : 100;
+    var cap = cfg.aceRule && cfg.aceRule.cap > 0 ? cfg.aceRule.cap : 0;
+    var acePay = aces > 0 ? Math.floor(acePot * pct / 100) : 0;
+    if(cap && acePay > cap) acePay = cap;
+    var aceSplit = splitPot(acePay, aces, cfg.unit >= 100 ? 100 : 1);
+    var acePaid = 0; aceSplit.each.forEach(function(c){ acePaid += c; });
+    res.ace = {before: pots.ace || 0, added: res.aceIn, change: res.change, pot: acePot, paidEach: aceSplit.each, paid: acePaid, after: acePot - acePaid + res.change};
+    var ctpPot = (pots.ctp || 0) + res.ctpIn;
+    var ctpSplit = splitPot(ctpWinners > 0 ? ctpPot : 0, ctpWinners, cfg.unit >= 100 ? 100 : 1);
+    var ctpPaid = 0; ctpSplit.each.forEach(function(c){ ctpPaid += c; });
+    res.ctp = {before: pots.ctp || 0, added: res.ctpIn, pot: ctpPot, paidEach: ctpSplit.each, paid: ctpPaid, after: ctpPot - ctpPaid};
+    res.cashHeld = (pots.ace || 0) + (pots.ctp || 0) + res.in;
+    res.cashOut = res.out + acePaid + ctpPaid;
+    res.cashLeft = res.cashHeld - res.cashOut;
+    res.balance = res.cashLeft - (res.ace.after + res.ctp.after + res.club);   /* must be 0: every cent is in a payout or a named pile */
+    return res;
+  }
+
+  function money(c, cur){
+    cur = cur || '$';
+    var neg = c < 0; c = Math.abs(Math.round(c));
+    var d = Math.floor(c / 100), r = c % 100;
+    return (neg ? '-' : '') + cur + String(d).replace(/\B(?=(\d{3})+(?!\d))/g, ',') + (r ? '.' + (r < 10 ? '0' : '') + r : '');
+  }
+  function ordinal(n){ var s = ['th','st','nd','rd'], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); }
+
+  return {rowsFromText: rowsFromText, parseScores: parseScores, parseRoster: parseRoster, tagOf: tagOf, tagsOf: tagsOf, suggest: suggest, key: key,
+    assignTags: assignTags, tieGroups: tieGroups, applyMoves: applyMoves, placesPaid: placesPaid, shareWeights: shareWeights, parseSplit: parseSplit,
+    payouts: payouts, splitPot: splitPot, night: night, money: money, ordinal: ordinal};
+})();
+
+
+</script>
+<script>
+(function(){
+'use strict';
+var SITE = 'https://samsbench.com/discgolf-league/';
+var APP_KEY = 'discgolf-league';
+var CHECKOUT = 'https://whop.com/checkout/plan_buTInGJbU5GKX';        /* $9 one-time; with ?a=<affiliate> */
+var CHECKOUT_HOME = 'https://whop.com/checkout/ch_U8cKD46FEy8JVtJ/';  /* same plan, returns to samsbench.com/discgolf-league/?bought=1#pro */
+var VERIFY = 'https://app-bizz-api.whop.site/api/verify';
+var PRICE = '$9';
+var GIFT = [];            /* SHA-256 of gift codes handed out in letters (codes themselves are not in this file) */
+var FREE_NIGHTS = 3;
+var KEY = 'tn.v1', PROKEY = 'tn.pro', AFFKEY = 'tn.aff';
+var $ = function(id){ return document.getElementById(id); };
+var M = TN.money;
+
+/* ---------- tracking (GoatCounter). ?via= is kept for the tab and, first-touch, for later visits, so a lock-in next week still counts for the letter that brought them. ---------- */
+var GC_CODE = 'tagnight';
+var SRC = (function(){ try{
+  var q = new URLSearchParams(location.search), v = (q.get('via') || '').replace(/[^a-z0-9-]/g, '').slice(0, 20) || (q.get('a') ? 'aff' : '');
+  if(v){ sessionStorage.setItem('tn.src', v); if(!localStorage.getItem('tn.src1') && v !== 'sheet' && v !== 'selftest') localStorage.setItem('tn.src1', v); if(v === 'selftest') localStorage.setItem('tn.src1', 'selftest'); return v; }
+  return sessionStorage.getItem('tn.src') || localStorage.getItem('tn.src1') || '';
+}catch(e){ return ''; } })();
+var FUNNEL = {'example':1, 'tool-start':1, 'file-read':1, 'close-out':1, 'lock-in':1, 'share-text':1, 'share-image':1, 'share-link':1, 'pro-view':1, 'pro-wall':1, 'buy-click':1, 'pro-unlocked':1, 'pro-gift':1, 'backup':1};
+var ONCE = {};
+function track(name, tries){
+  try{
+    if(!tries && SRC && FUNNEL[name]) track(name + '.' + SRC);
+    if(window.goatcounter && window.goatcounter.count) window.goatcounter.count({path: name, title: name, event: true});
+    else if((tries || 0) < 20) setTimeout(function(){ track(name, (tries || 0) + 1); }, 500);
+  }catch(e){}
+}
+function trackOnce(name){ if(!ONCE[name]){ ONCE[name] = 1; track(name); } }
+
+/* ---------- storage ---------- */
+function lsGet(k, d){ try{ var t = localStorage.getItem(k); return t ? JSON.parse(t) : d; }catch(e){ return d; } }
+function lsSet(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); return true; }catch(e){ return false; } }
+function defCfg(){ return {fee:'', ace:'', ctp:'', club:'', aceExtra:'in', perRow:1, mode:'third', val:'', split:'', unit:100, acePct:'', aceCap:'', tie:'lowtag', dnf:'keep', scoreUse:'all'}; }
+function newLeague(name){ return {name: name || '', roster: {}, cfg: defCfg(), pots: {ace:0, ctp:0}, history: []}; }
+function blank(){ return {v:1, cur:0, leagues:[newLeague()], tonight: blankNight()}; }
+function blankNight(){ return {src:'', tab:'file', paste:'', typed:'', rows:null, scoreCol:'', players:[], date: today(), dateSet:false, aces:'', ctpWin:'', counted:'', added:{}, aceBuy:{}, order:{}, ex:false, locked:false, potsBefore:null, warn:[], skipped:[]}; }
+function today(){ var d = new Date(); return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
+function fixState(o){
+  if(!o || o.v !== 1 || !Array.isArray(o.leagues) || !o.leagues.length) return blank();
+  o.leagues = o.leagues.filter(function(l){ return l && typeof l === 'object'; }).map(function(l){
+    var L = newLeague(l.name); L.roster = l.roster && typeof l.roster === 'object' ? l.roster : {}; L.cfg = Object.assign(defCfg(), l.cfg || {});
+    L.pots = Object.assign({ace:0, ctp:0}, l.pots || {}); L.history = Array.isArray(l.history) ? l.history.filter(function(h){ return h && typeof h === 'object'; }) : []; return L;
+  });
+  if(!o.leagues.length) o.leagues = [newLeague()];
+  if(!(o.cur >= 0 && o.cur < o.leagues.length)) o.cur = 0;
+  o.tonight = Object.assign(blankNight(), o.tonight || {});
+  if(!Array.isArray(o.tonight.players)) o.tonight.players = [];
+  ['added','aceBuy','order'].forEach(function(k){ if(!o.tonight[k] || typeof o.tonight[k] !== 'object') o.tonight[k] = {}; });
+  if(!o.tonight.dateSet && !o.tonight.locked && !o.tonight.players.length) o.tonight.date = today();
+  return o;
+}
+var S = fixState(lsGet(KEY, null));
+var MINE = null;   /* while the example is open, the user's own data waits here */
+function L(){ return S.leagues[S.cur]; }
+function save(){ if(SHARED || S.tonight.ex) return; lsSet(KEY, S); }
+
+/* ---------- Pro ---------- */
+var PRO = lsGet(PROKEY, null); if(!PRO || typeof PRO !== 'object') PRO = {};
+function isPro(){ return !!(PRO.email || PRO.gift); }
+function affCode(){
+  var a = ''; try{ a = new URLSearchParams(location.search).get('a') || ''; }catch(e){}
+  a = a.replace(/[^A-Za-z0-9_.-]/g, '').slice(0, 40);
+  try{ if(a) localStorage.setItem(AFFKEY, a); else a = localStorage.getItem(AFFKEY) || ''; }catch(e){}
+  return a;
+}
+function buyUrl(){ var a = affCode(); return a ? CHECKOUT + '?a=' + encodeURIComponent(a) : CHECKOUT_HOME; }
+function sha256hex(str){ return crypto.subtle.digest('SHA-256', new TextEncoder().encode(str)).then(function(b){ return Array.prototype.map.call(new Uint8Array(b), function(x){ return ('0' + x.toString(16)).slice(-2); }).join(''); }); }
+
+/* ---------- helpers ---------- */
+function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+function cents(v){ var n = Number(v); return v !== '' && isFinite(n) && n > 0 ? Math.round(n * 100) : 0; }
+var toastT;
+function say(t){ var el = document.querySelector('.toast'); if(!el){ el = document.createElement('div'); el.className = 'toast'; el.setAttribute('role', 'status'); document.body.appendChild(el); } el.textContent = t; clearTimeout(toastT); toastT = setTimeout(function(){ el.remove(); }, 2800); }
+/* "Smith, Ray, Jess" -> keeps "Smith, Ray" together when that is a player's name tonight */
+function names(str){
+  var s = String(str || ''), out = [];
+  S.tonight.players.forEach(function(p){ if(p.name.indexOf(',') >= 0 && s.indexOf(p.name) >= 0){ out.push(p.name); s = s.split(p.name).join(','); } });
+  return out.concat(s.split(/[,;\n]/).map(function(x){ return x.trim(); }).filter(Boolean));
+}
+function fmtDate(d){ try{ var x = new Date(d + 'T12:00:00'); if(isNaN(x)) return d; return x.toLocaleDateString(undefined, {weekday:'short', month:'short', day:'numeric'}); }catch(e){ return d; } }
+function leagueName(){ return (L().name || '').trim() || 'League night'; }
+
+/* ---------- read xlsx without a library (UDisc exports .xlsx) ---------- */
+function inflate(bytes){
+  var ds = new DecompressionStream('deflate-raw');
+  return new Response(new Blob([bytes]).stream().pipeThrough(ds)).arrayBuffer().then(function(b){ return new Uint8Array(b); });
+}
+function unzip(buf){
+  var dv = new DataView(buf), u8 = new Uint8Array(buf), eocd = -1;
+  for(var i = buf.byteLength - 22; i >= Math.max(0, buf.byteLength - 66000); i--) if(dv.getUint32(i, true) === 0x06054b50){ eocd = i; break; }
+  if(eocd < 0) return Promise.reject(new Error('not a zip'));
+  var n = dv.getUint16(eocd + 10, true), off = dv.getUint32(eocd + 16, true), files = {}, jobs = [];
+  for(var k = 0; k < n; k++){
+    if(dv.getUint32(off, true) !== 0x02014b50) break;
+    var method = dv.getUint16(off + 10, true), csize = dv.getUint32(off + 20, true), nl = dv.getUint16(off + 28, true), el = dv.getUint16(off + 30, true), cl = dv.getUint16(off + 32, true), lo = dv.getUint32(off + 42, true);
+    var name = new TextDecoder().decode(u8.subarray(off + 46, off + 46 + nl));
+    var start = lo + 30 + dv.getUint16(lo + 26, true) + dv.getUint16(lo + 28, true), data = u8.slice(start, start + csize);
+    if(/^xl\/(sharedStrings\.xml|worksheets\/sheet\d+\.xml)$/.test(name)){
+      (function(name, method, data){ jobs.push((method === 8 ? inflate(data) : Promise.resolve(data)).then(function(d){ files[name] = new TextDecoder().decode(d); })); })(name, method, data);
+    }
+    off += 46 + nl + el + cl;
+  }
+  return Promise.all(jobs).then(function(){ return files; });
+}
+function colNum(ref){ var m = String(ref).match(/^([A-Z]+)/), n = 0; if(!m) return -1; for(var i = 0; i < m[1].length; i++) n = n * 26 + (m[1].charCodeAt(i) - 64); return n - 1; }
+function xlsxRows(buf){
+  return unzip(buf).then(function(f){
+    var P = new DOMParser(), ss = [];
+    if(f['xl/sharedStrings.xml']){
+      var sd = P.parseFromString(f['xl/sharedStrings.xml'], 'application/xml'), si = sd.getElementsByTagName('si');
+      for(var i = 0; i < si.length; i++){ var ts = si[i].getElementsByTagName('t'), s = ''; for(var j = 0; j < ts.length; j++) s += ts[j].textContent; ss.push(s); }
+    }
+    var sheets = Object.keys(f).filter(function(k){ return /worksheets\/sheet\d+\.xml$/.test(k); }).sort(function(a, b){ return Number(a.match(/(\d+)\.xml/)[1]) - Number(b.match(/(\d+)\.xml/)[1]); });
+    if(!sheets.length) throw new Error('no sheet');
+    var d = P.parseFromString(f[sheets[0]], 'application/xml'), rows = [], rs = d.getElementsByTagName('row');
+    for(var r = 0; r < rs.length; r++){
+      var cs = rs[r].getElementsByTagName('c'), row = [];
+      for(var c = 0; c < cs.length; c++){
+        var t = cs[c].getAttribute('t'), ix = colNum(cs[c].getAttribute('r') || ''), v = cs[c].getElementsByTagName('v')[0], val = '';
+        if(t === 's') val = v ? (ss[Number(v.textContent)] || '') : '';
+        else if(t === 'inlineStr'){ var it = cs[c].getElementsByTagName('t'); for(var q = 0; q < it.length; q++) val += it[q].textContent; }
+        else val = v ? v.textContent : '';
+        if(ix < 0) ix = row.length;
+        while(row.length < ix) row.push('');
+        row[ix] = val;
+      }
+      if(row.some(function(x){ return String(x).trim() !== ''; })) rows.push(row);
+    }
+    return rows;
+  });
+}
+
+/* ---------- tonight's players ---------- */
+function freshNightIfLocked(){
+  if(S.tonight.ex){ S = MINE || blank(); MINE = null; S.tonight.ex = false; }
+  if(S.tonight.locked){ var tab = S.tonight.tab; S.tonight = blankNight(); S.tonight.tab = tab; }
+  if(!S.tonight.dateSet) S.tonight.date = today();
+}
+function parseNow(){
+  var t = S.tonight, input = t.tab === 'file' ? t.rows : t.tab === 'paste' ? t.paste : t.typed;
+  if(!input || (typeof input === 'string' && !input.trim())) return null;
+  return TN.parseScores(input, t.scoreCol);
+}
+function setPlayers(parsed){
+  var t = S.tonight, old = {};
+  t.players.forEach(function(p){ old[TN.key(p.name)] = p; });   /* keep the director's ticks when the same names come back (re-parse, other score column) */
+  var divs = {};
+  t.players = parsed.players.map(function(p, i){
+    var dk = p.div.toLowerCase(); if(divs[dk] == null) divs[dk] = p.div; var div = divs[dk];
+    var o = old[TN.key(p.name)];
+    var tg = p.tag != null ? p.tag : TN.tagOf(L().roster, p.name, p.user);
+    if(o && o.tagSet) tg = o.tag;
+    var alias = o && o.alias ? o.alias : '';
+    return {id: 'p' + i, name: p.name, user: p.user, div: div, score: p.score, tag: tg, tagSet: !!(o && o.tagSet),
+      plays: o && o.playsSet ? o.plays : (tg != null && p.score != null), playsSet: !!(o && o.playsSet),
+      paid: o ? o.paid : true, paidMark: p.paidMark, missingRound: p.missingRound, alias: alias};
+  });
+  t.order = {}; t.warn = parsed.warn; t.skipped = parsed.skipped; t.scoreCols = parsed.scoreCols || []; t.scoreColUsed = parsed.scoreCol;
+  if(t.players.length >= 2 && !t.ex) trackOnce('tool-start');
+  renderAll();
+}
+function reparse(){ var p = parseNow(); if(p) setPlayers(p); else { S.tonight.players = []; renderAll(); } }
+
+function parseMsgHtml(){
+  var t = S.tonight, ps = t.players, h = '';
+  if(t.locked) return '<p class="msg ok">Locked in. Tag list and pots are updated for next week. <button class="btn small" type="button" id="backupNow">Save backup file</button> <button class="btn small" type="button" id="nextNight">Start the next night</button></p>';
+  if(!ps.length){
+    if((t.tab === 'paste' && t.paste.trim()) || (t.tab === 'type' && t.typed.trim()) || (t.tab === 'file' && t.rows)) h += '<p class="msg err">No players found. ' + (t.tab === 'type' ? 'Put one player per line with their score.' : 'Is this the leaderboard export from UDisc, with its header row?') + '</p>';
+  } else {
+    var noScore = ps.filter(function(p){ return p.score == null; }).length, tagged = ps.filter(function(p){ return p.tag != null; }).length;
+    h += '<p class="msg ok">' + ps.length + (L().cfg.perRow == 2 ? ' teams' : ' players') + (t.scoreColUsed ? ' · scores from “' + esc(t.scoreColUsed) + '”' : '') + ' · ' + tagged + ' with a tag' +
+      (noScore ? ' · ' + noScore + ' without a score (DNF)' : '') + '.</p>';
+    var unpaidMarks = ps.filter(function(p){ return p.paidMark === false; }).length;
+    if(unpaidMarks) h += '<p class="msg warn">UDisc shows ' + unpaidMarks + ' as unpaid. Cash leagues usually never tick that box, so everyone counts as paid here. Untick anyone who really didn’t pay.</p>';
+  }
+  (t.warn || []).forEach(function(w){ h += '<p class="msg warn">' + esc(w) + '</p>'; });
+  if(t.skipped && t.skipped.length) h += '<p class="msg warn">Skipped ' + t.skipped.length + ' line(s): ' + t.skipped.slice(0, 4).map(function(s){ return '“' + esc(s.line.slice(0, 40)) + '” (' + esc(s.why) + ')'; }).join(', ') + '</p>';
+  /* players with no tag who look like someone on the tag list */
+  var taken = {}; ps.forEach(function(p){ if(p.tag != null) taken[p.tag] = 1; });
+  var sug = [];
+  ps.forEach(function(p){ if(p.tag == null) TN.suggest(L().roster, p.name, taken).forEach(function(n){ sug.push([p, n]); }); });
+  if(sug.length) h += '<div class="msg warn">Same person? ' + sug.slice(0, 6).map(function(x){ return '<span style="display:inline-block;margin:4px 8px 0 0">' + esc(x[0].name) + ' = #' + x[1] + ' ' + esc(L().roster[x[1]]) + ' <button class="btn small" type="button" data-sugg="' + x[0].id + '|' + x[1] + '">Yes</button></span>'; }).join('') + '</div>';
+  return h;
+}
+
+/* ---------- compute the night ---------- */
+function groupBy(arr, k){ var o = {}; arr.forEach(function(x){ var v = x[k] || ''; (o[v] = o[v] || []).push(x); }); return o; }
+function compute(){
+  var t = S.tonight, cfg = L().cfg, ps = t.players;
+  var finished = ps.filter(function(p){ return p.score != null; });
+  if(finished.length < 1) return null;
+  var r = {byId: {}, warns: [], errs: []};
+  ps.forEach(function(p){ r.byId[p.id] = p; });
+  /* tags */
+  var groups = cfg.scoreUse === 'div' ? groupBy(ps, 'div') : {'': ps};
+  r.moves = []; r.ties = [];
+  var dup = {};
+  ps.forEach(function(p){ if(p.plays && p.tag != null){ (dup[p.tag] = dup[p.tag] || []).push(p.name); } });
+  Object.keys(dup).forEach(function(k){ if(dup[k].length > 1) r.errs.push('Tag #' + k + ' is listed for ' + dup[k].join(' and ') + '. Fix it in the table.'); });
+  Object.keys(groups).forEach(function(g){
+    var tp = groups[g].filter(function(p){ return p.plays && p.tag != null && (p.score != null || cfg.dnf === 'last'); }).map(function(p){ return {id: p.id, score: p.score, tagIn: p.tag}; });
+    TN.assignTags(tp, cfg.tie, t.order[g] || [], cfg.dnf).forEach(function(m){ r.moves.push(m); });
+    if(cfg.tie === 'manual') TN.tieGroups(tp).forEach(function(x){ r.ties.push({g: g, score: x.score, ids: x.ids}); });
+  });
+  r.moves.sort(function(a, b){ return a.tagOut - b.tagOut; });
+  if(!t.locked){
+    var ros = L().roster;
+    ps.forEach(function(p){
+      if(!p.plays || p.tag == null) return;
+      var holder = ros[p.tag];
+      if(holder && TN.key(holder) !== TN.key(p.name) && TN.key(holder) !== TN.key(p.alias) && (!p.user || TN.key(holder) !== TN.key(p.user))) r.warns.push('#' + p.tag + ' belongs to ' + holder + ' on your list. If ' + p.name + ' really has it now, carry on; otherwise fix the number.');
+    });
+  }
+  /* money */
+  r.money = cents(cfg.fee) > 0;
+  if(r.money){
+    var per = Number(cfg.perRow) === 2 ? 2 : 1, dg = groupBy(ps, 'div');
+    var divs = Object.keys(dg).map(function(dn){
+      var paid = dg[dn].filter(function(p){ return p.paid; }), b = t.aceBuy[dn];
+      return {name: dn, entries: paid.length * per, finishers: paid.map(function(p){ return {id: p.id, score: p.score}; }), added: cents(t.added[dn]),
+        aceBuyins: b === '' || b == null ? null : Math.max(0, Math.round(Number(b)) || 0)};
+    });
+    var split = null; r.splitLocked = false;
+    if(cfg.mode === 'split'){ if(isPro()) split = TN.parseSplit(cfg.split); else r.splitLocked = true; }
+    var pots = t.locked && t.potsBefore ? t.potsBefore : L().pots;
+    var n = TN.night({fee: cents(cfg.fee), ace: cents(cfg.ace), ctp: cents(cfg.ctp), club: cents(cfg.club), aceExtra: cfg.aceExtra === 'extra',
+      mode: cfg.mode === 'split' ? 'third' : cfg.mode, val: Number(cfg.val) || (cfg.mode === 'pct' ? 40 : 3), split: split, unit: Number(cfg.unit) || 100,
+      aceRule: {pct: cfg.acePct === '' || cfg.acePct == null ? 100 : Math.max(0, Math.min(100, Number(cfg.acePct))), cap: cents(cfg.aceCap)}},
+      divs, {ace: cents(pots.ace), ctp: cents(pots.ctp)}, names(t.aces).length, names(t.ctpWin).length);
+    Object.keys(n).forEach(function(k){ r[k] = n[k]; });
+    r.feeTooLow = cents(cfg.fee) < cents(cfg.ctp) + cents(cfg.club) + (cfg.aceExtra === 'extra' ? 0 : cents(cfg.ace));
+    r.counted = t.counted === '' || t.counted == null ? null : cents(t.counted);
+  }
+  r.aceNames = names(t.aces); r.ctpNames = names(t.ctpWin);
+  r.finished = finished.length;
+  return r;
+}
+
+/* ---------- render: players table ---------- */
+function renderPlayers(){
+  var ps = S.tonight.players, el = $('players');
+  if(!ps.length){ el.innerHTML = ''; return; }
+  var h = '<table class="ptable"><thead><tr><th>Player</th><th>Score</th><th>Paid</th><th>Tag</th><th>Plays</th></tr></thead><tbody>';
+  ps.forEach(function(p){
+    var lab = p.score == null && L().cfg.dnf !== 'last' ? 'DNF' : (p.tag == null ? 'no tag' : 'yes');
+    h += '<tr' + (p.score == null ? ' class="dnf"' : '') + '><td>' + esc(p.name) + (p.div ? '<br><small>' + esc(p.div) + '</small>' : '') + '</td>' +
+      '<td class="num">' + (p.score == null ? 'DNF' : p.score) + '</td>' +
+      '<td><input type="checkbox" data-paid="' + p.id + '"' + (p.paid ? ' checked' : '') + ' aria-label="' + esc(p.name) + ' paid"></td>' +
+      '<td><input class="tagin" type="number" min="1" inputmode="numeric" aria-label="Tag for ' + esc(p.name) + '" data-tag="' + p.id + '" value="' + (p.tag == null ? '' : p.tag) + '" placeholder="—"></td>' +
+      '<td><label class="chk"><input type="checkbox" data-plays="' + p.id + '"' + (p.plays ? ' checked' : '') + (p.tag == null || lab === 'DNF' ? ' disabled' : '') + '> <span>' + lab + '</span></label></td></tr>';
+  });
+  el.innerHTML = h + '</tbody></table>';
+  $('plist').innerHTML = ps.map(function(p){ return '<option value="' + esc(p.name) + '">'; }).join('');
+}
+function renderCols(){
+  var t = S.tonight, el = $('colBox');
+  if(!t.scoreCols || t.scoreCols.length < 2 || !t.players.length){ el.innerHTML = ''; return; }
+  el.innerHTML = '<div class="field" style="margin-top:10px;max-width:420px"><label for="scoreCol">Score to use (handicap leagues: pick your net score)</label><select id="scoreCol">' +
+    t.scoreCols.map(function(c){ return '<option' + (c === t.scoreColUsed ? ' selected' : '') + '>' + esc(c) + '</option>'; }).join('') + '</select></div>';
+}
+
+/* ---------- render: ties ---------- */
+function renderTies(r){
+  var el = $('ties');
+  if(!r || !r.ties.length || S.tonight.locked){ el.innerHTML = ''; return; }
+  var h = '';
+  r.ties.forEach(function(t){
+    var saved = S.tonight.order[t.g] || [];
+    var ord = t.ids.slice().sort(function(a, b){ var oa = saved.indexOf(a), ob = saved.indexOf(b); if(oa < 0 || ob < 0) return r.byId[a].tag - r.byId[b].tag; return oa - ob; });
+    h += '<div class="tie"><b>Tied on ' + t.score + '</b>: set the playoff order (winner first)<ol>';
+    ord.forEach(function(id, i){
+      h += '<li><span style="flex:1">' + esc(r.byId[id].name) + ' (#' + r.byId[id].tag + ')</span>' +
+        '<button type="button" class="btn small" data-up="' + esc(t.g) + '|' + id + '|' + t.score + '"' + (i === 0 ? ' disabled' : '') + ' aria-label="Move ' + esc(r.byId[id].name) + ' up">↑</button></li>';
+    });
+    h += '</ol></div>';
+  });
+  el.innerHTML = h;
+}
+
+/* ---------- render: the sheet ---------- */
+var LAST = null;
+function tagRow(name, tagIn, tagOut, score){
+  var d = tagIn - tagOut;
+  return '<div class="mvrow"><span class="tag' + (tagOut === 1 ? ' gold' : '') + '" style="--w:50px">' + tagOut + '</span><span class="who">' + esc(name) + (score != null ? ' · ' + score : ' · DNF') + '</span><span class="d ' + (d > 0 ? 'up' : d < 0 ? 'down' : '') + '">' + (d > 0 ? '↑ from ' + tagIn : d < 0 ? '↓ from ' + tagIn : 'keeps it') + '</span></div>';
+}
+function renderSheet(){
+  var r = compute(); LAST = r;
+  var t = S.tonight, h = '<header><b>' + esc(leagueName()) + '</b><span>' + esc(fmtDate(t.date)) + (r ? ' · ' + t.players.length + (L().cfg.perRow == 2 ? ' teams' : ' players') : '') + (t.locked ? ' · locked in ✓' : '') + '</span></header>';
+  renderTies(r);
+  if(!r){
+    $('sheet').innerHTML = h + '<div class="empty"><span class="tag none">#?</span>Tonight’s sheet fills in as soon as you add scores.</div>';
+    $('mbarText').textContent = 'Add scores to start'; return;
+  }
+  if(!t.ex && r.finished >= 2) trackOnce('close-out');
+  r.errs.forEach(function(e){ h += '<section><p class="msg err" style="margin:0">' + esc(e) + '</p></section>'; });
+  r.warns.forEach(function(e){ h += '<section><p class="msg warn" style="margin:0">' + esc(e) + '</p></section>'; });
+  h += '<section><h3>Tags<span>' + (r.moves.length ? r.moves.length + ' in play' : 'none in play') + '</span></h3>';
+  if(!r.moves.length) h += '<p style="margin:0">Nobody on your tag list played tonight. Add tags in step 2 or in the table.</p>';
+  r.moves.forEach(function(m){ h += tagRow(r.byId[m.id].name, m.tagIn, m.tagOut, m.score); });
+  h += '</section>';
+  if(!r.money) h += '<section><h3>Payouts</h3><p style="margin:0">Add your entry fee in step 3 to split the cash.</p></section>';
+  else {
+    if(r.feeTooLow) h += '<section><p class="msg err" style="margin:0">The entry is smaller than what goes to the ace pot, CTP and club. Check step 3.</p></section>';
+    if(r.splitLocked) h += '<section><p class="msg warn" style="margin:0">Your own split is a Pro feature. Showing “top third” for now. <a href="#pro" data-prolink="1">See Pro</a></p></section>';
+    r.divs.forEach(function(d){
+      h += '<section><h3>' + esc(d.name || 'Payouts') + '<span>' + d.entries + ' paid in · ' + M(d.pool) + ' to players · top ' + d.k + '</span></h3>';
+      var paid = d.pay.rows.filter(function(x){ return x.cents > 0; });
+      if(!paid.length) h += '<p style="margin:0">No payout' + (d.pool > 0 ? ' (nobody to pay; the money goes to the ace pot)' : '') + '.</p>';
+      paid.forEach(function(x){ h += '<div class="payrow"><span class="pl">' + (x.tied ? 'T' : '') + TN.ordinal(x.place) + '</span><span>' + esc(r.byId[x.id].name) + ' · ' + x.score + '</span><span class="amt">' + M(x.cents) + '</span></div>'; });
+      var zero = d.pay.rows.filter(function(x){ return x.cents === 0 && x.place <= d.k; });
+      if(zero.length) h += '<p style="margin:4px 0 0">' + zero.map(function(x){ return esc(r.byId[x.id].name); }).join(', ') + ': tied on the cash line, too little to split in whole bills.</p>';
+      h += '</section>';
+    });
+    var a = r.ace, c = r.ctp;
+    if(a.pot > 0 || a.before > 0 || r.aceNames.length || a.change){
+      h += '<section><h3>Ace pot<span>' + M(a.before) + ' + ' + M(a.added) + ' tonight' + (a.change ? ' + ' + M(a.change) + ' change' : '') + '</span></h3>';
+      if(r.aceNames.length) h += r.aceNames.map(function(nm, i){ return '<div class="payrow"><span class="pl">ACE</span><span>' + esc(nm) + '</span><span class="amt">' + M(a.paidEach[i] || 0) + '</span></div>'; }).join('') + '<p style="margin:4px 0 0">Left in the pot: <b>' + M(a.after) + '</b></p>';
+      else h += '<p style="margin:0">No aces. <b>' + M(a.after) + '</b> rolls to next week.</p>';
+      h += '</section>';
+    }
+    if(c.pot > 0 || r.ctpNames.length){
+      h += '<section><h3>CTP<span>' + M(c.pot) + ' in the pot</span></h3>';
+      if(r.ctpNames.length) h += r.ctpNames.map(function(nm, i){ return '<div class="payrow"><span class="pl">CTP</span><span>' + esc(nm) + '</span><span class="amt">' + M(c.paidEach[i] || 0) + '</span></div>'; }).join('') + (c.after ? '<p style="margin:4px 0 0">Left over: ' + M(c.after) + ' (carries over)</p>' : '');
+      else h += '<p style="margin:0">No winner. ' + M(c.after) + ' carries over.</p>';
+      h += '</section>';
+    }
+    h += '<section><h3>The envelope</h3><div class="env">' +
+      '<span>Cash in tonight</span><span>' + M(r.in) + '</span>' +
+      (r.counted != null ? '<span>You counted</span><span>' + M(r.counted) + '</span><span class="' + (r.counted === r.in ? 'ok' : 'bad') + '">' + (r.counted === r.in ? 'Matches ✓' : (r.counted < r.in ? 'Short ' + M(r.in - r.counted) : 'Over by ' + M(r.counted - r.in)) + '. Check who paid in step 1.') + '</span><span></span>' : '') +
+      (a.before + c.before ? '<span>Pot money you already hold</span><span>' + M(a.before + c.before) + '</span>' : '') +
+      '<span>Hand out tonight</span><span>− ' + M(r.cashOut) + '</span>' +
+      '<span class="t">Stays in the envelope</span><span class="t">' + M(r.cashLeft) + '</span>' +
+      '<span>· ace pot</span><span>' + M(a.after) + '</span>' + (c.after ? '<span>· CTP carry</span><span>' + M(c.after) + '</span>' : '') + (r.club ? '<span>· club</span><span>' + M(r.club) + '</span>' : '') +
+      (r.balance === 0 ? '<span class="ok">Every cent is in a payout or a pot ✓</span><span></span>' : '<span class="bad">' + M(r.balance) + ' isn’t assigned. Check step 3.</span><span></span>') +
+      '</div></section>';
+  }
+  h += '<div class="acts"><button class="btn small" type="button" id="aText">Copy for group chat</button><button class="btn small" type="button" id="aImg">Save picture</button>' +
+    '<button class="btn small" type="button" id="aLink">Copy players’ link</button><button class="btn small" type="button" id="aPrint">Print</button>' +
+    (t.locked ? '<button class="btn wide" type="button" id="nextNight2">Locked in ✓ · Start the next night</button>' :
+      '<button class="btn green wide" type="button" id="aLock"' + (r.errs.length ? ' disabled' : '') + '>' + (t.ex ? 'Lock in (example: try it)' : 'Lock in tonight: update tags and pots') + '</button>') + '</div>';
+  $('sheet').innerHTML = h;
+  var top = r.moves[0] ? r.byId[r.moves[0].id].name + ' has #' + r.moves[0].tagOut : '';
+  $('mbarText').textContent = top || (r.money ? M(r.cashOut) + ' to hand out' : 'Tonight’s sheet');
+}
+
+/* ---------- render: history + stats ---------- */
+function renderHist(){
+  var hs = L().history, el = $('hist');
+  var tools = '<p style="margin:10px 0 0"><button class="btn small" type="button" id="backup">Save backup file</button> <label class="btn small" style="display:inline-flex;margin:0">Restore a backup<input type="file" id="restore" accept=".json,application/json" hidden></label> <button class="btn small" type="button" id="copyList">Copy the tag list</button></p>';
+  if(!hs.length){ el.innerHTML = '<p style="margin:0">Nights you lock in show up here: who held #1, the ace pot over time, who climbed most.</p>' + tools; return; }
+  var show = isPro() ? hs.slice().reverse() : hs.slice(-FREE_NIGHTS).reverse();
+  var h = stats(hs) + '<ul class="hist">';
+  show.forEach(function(n){
+    var i = hs.indexOf(n), one = (n.moves || []).filter(function(m){ return m[2] === 1; })[0];
+    h += '<li><b>' + esc(fmtDate(n.date)) + '</b> · ' + n.players + ' players' + (one ? ' · #1: ' + esc(one[0]) : '') + (n.out != null ? ' · paid out ' + M(n.out) : '') + (n.aceAfter != null ? ' · ace pot after ' + M(n.aceAfter) : '') +
+      (n.link ? ' <button class="btn small" type="button" data-hlink="' + i + '">Copy its link</button>' : '') + '</li>';
+  });
+  h += '</ul><p><button class="btn small" type="button" id="undo">Undo the last lock-in</button></p>' + tools;
+  if(!isPro() && hs.length > FREE_NIGHTS){ h += '<div class="lock"><b>' + (hs.length - FREE_NIGHTS) + ' older nights are saved but hidden.</b> Pro shows the whole season and the stats. <a href="#pro" data-prolink="1">See Pro</a></div>'; trackOnce('pro-wall'); }
+  el.innerHTML = h;
+}
+function stats(hs){
+  var weeks1 = {}, climb = {name:'', n:0}, aceHigh = 0;
+  hs.forEach(function(n){
+    (n.moves || []).forEach(function(m){ if(m[2] === 1) weeks1[m[0]] = (weeks1[m[0]] || 0) + 1; if(m[1] - m[2] > climb.n) climb = {name: m[0], n: m[1] - m[2]}; });
+    aceHigh = Math.max(aceHigh, n.acePot || 0);
+  });
+  var best = Object.keys(weeks1).sort(function(a, b){ return weeks1[b] - weeks1[a]; })[0];
+  if(!isPro()) return '<div class="stats"><div class="stat"><b>' + hs.length + '</b>nights locked in</div><div class="stat"><b>Pro</b>Most nights at #1, biggest climb, ace pot high</div></div>';
+  return '<div class="stats"><div class="stat"><b>' + hs.length + '</b>nights locked in</div><div class="stat"><b>' + (best ? esc(best) : '—') + '</b>' + (best ? weeks1[best] + ' nights at #1' : 'most nights at #1') + '</div>' +
+    '<div class="stat"><b>' + (climb.n ? esc(climb.name) : '—') + '</b>' + (climb.n ? 'biggest climb: ' + climb.n + ' tags in one night' : 'biggest climb') + '</div><div class="stat"><b>' + M(aceHigh) + '</b>ace pot high</div></div>';
+}
+
+/* ---------- render: pro ---------- */
+function renderPro(){
+  var el = $('pro'), bought = /[?&]bought=1/.test(location.search);
+  if(isPro()){ el.innerHTML = '<h2>Pro is on</h2><p>Whole-season history, stats, your own payout split and more leagues are unlocked on this device' + (PRO.email ? ' for ' + esc(PRO.email) : '') + '. Thanks for supporting a small tool.</p>'; return; }
+  el.innerHTML = '<h2>Tag Night Pro</h2>' +
+    '<p>Free covers every league night, backups included. Pro is for the organizer who runs it all season.</p>' +
+    '<ul><li>The whole season, not just the last ' + FREE_NIGHTS + ' nights</li><li>Season stats: most nights at #1, biggest climb, ace pot high</li><li>Your own payout split, like 50 / 30 / 20</li><li>More than one league (Tuesday doubles, Thursday tags…)</li></ul>' +
+    '<p><span class="price">' + PRICE + '</span> once. No subscription.</p>' +
+    '<p><a class="btn primary" id="buy" href="' + esc(buyUrl()) + '">Get Pro for ' + PRICE + '</a></p>' +
+    (bought ? '<p><b>Thanks for buying!</b> Enter the email you paid with to unlock.</p>' : '') +
+    '<label for="proIn" style="margin-top:12px">Already bought? Enter the email you paid with, or a gift code</label><div class="row"><input type="text" id="proIn" autocomplete="email"><button class="btn" type="button" id="proGo">Unlock</button></div><div id="proMsg"></div>';
+}
+
+function setVal(id, v){ var e = $(id); if(e && document.activeElement !== e) e.value = v == null ? '' : v; }
+function renderForm(){
+  var c = L().cfg, t = S.tonight;
+  ['fee','ace','ctp','club','val','acePct','aceCap','split'].forEach(function(k){ setVal(k, c[k]); });
+  $('mode').value = c.mode; $('unit').value = String(c.unit); $('tie').value = c.tie; $('scoreUse').value = c.scoreUse; $('dnf').value = c.dnf;
+  $('aceExtra').value = c.aceExtra; $('perRow').value = String(c.perRow);
+  $('valBox').hidden = c.mode === 'third' || c.mode === 'split'; $('splitBox').hidden = c.mode !== 'split';
+  $('val').previousElementSibling.textContent = c.mode === 'pct' ? 'Top % paid' : 'Places paid';
+  setVal('acePot', L().pots.ace || 0); setVal('ctpPot', L().pots.ctp || 0);
+  setVal('aces', t.aces); setVal('ctpWin', t.ctpWin); setVal('counted', t.counted);
+  setVal('paste', t.paste); setVal('typed', t.typed); setVal('lgName', L().name); setVal('date', t.date);
+  setVal('roster', rosterText());
+  $('lgSel').innerHTML = S.leagues.map(function(l, i){ return '<option value="' + i + '"' + (i === S.cur ? ' selected' : '') + '>' + esc(l.name || 'League ' + (i + 1)) + '</option>'; }).join('') + '<option value="new">+ Another league' + (isPro() ? '' : ' (Pro)') + '</option>';
+  var n = Object.keys(L().roster).length;
+  $('rosterCount').textContent = n;
+  if(!n && !rosterTouched) $('rosterBox').open = true;
+  document.querySelectorAll('[data-tab]').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.tab === t.tab)); });
+  document.querySelectorAll('[data-pane]').forEach(function(p){ p.hidden = p.dataset.pane !== t.tab; });
+  var dn = Object.keys(groupBy(t.players, 'div'));
+  $('addedBox').innerHTML = dn.length ? '<div class="grid2">' + dn.map(function(d){
+    return '<div class="field"><label>Added cash' + (d ? ' · ' + esc(d) : '') + ' $</label><input type="number" min="0" step="1" inputmode="decimal" data-added="' + esc(d) + '" value="' + esc(t.added[d] || '') + '"></div>' +
+      '<div class="field"><label>Ace buy-ins' + (d ? ' · ' + esc(d) : '') + ' (blank = all)</label><input type="number" min="0" step="1" inputmode="numeric" data-acebuy="' + esc(d) + '" value="' + esc(t.aceBuy[d] == null ? '' : t.aceBuy[d]) + '"></div>';
+  }).join('') + '</div>' : '';
+  $('exNote').hidden = !t.ex;
+  $('parseMsg').innerHTML = parseMsgHtml();
+}
+var rosterTouched = false;
+function rosterText(){ var r = L().roster; return Object.keys(r).map(Number).sort(function(a, b){ return a - b; }).map(function(n){ return n + ' ' + r[n]; }).join('\n'); }
+function renderAll(){ renderForm(); renderCols(); renderPlayers(); renderSheet(); renderHist(); renderPro(); save(); }
+
+/* ---------- outputs ---------- */
+function tagListAfter(r){
+  if(S.tonight.locked) return L().roster;
+  return TN.applyMoves(L().roster, r.moves.map(function(m){ return {name: r.byId[m.id].alias || r.byId[m.id].name, tagIn: m.tagIn, tagOut: m.tagOut}; }));
+}
+function sheetText(r){
+  var t = S.tonight, lines = [leagueName() + ' · ' + fmtDate(t.date), ''];
+  if(r.moves.length){ lines.push('TAGS'); r.moves.forEach(function(m){ var d = m.tagIn - m.tagOut; lines.push('#' + m.tagOut + ' ' + r.byId[m.id].name + (m.score != null ? ' (' + m.score + ')' : ' (DNF)') + (d > 0 ? ' ↑ from #' + m.tagIn : d < 0 ? ' ↓ from #' + m.tagIn : '')); }); lines.push(''); }
+  if(r.money){
+    r.divs.forEach(function(d){
+      var paid = d.pay.rows.filter(function(x){ return x.cents > 0; }); if(!paid.length) return;
+      lines.push((d.name ? d.name.toUpperCase() + ' ' : '') + 'PAYOUTS (' + d.entries + ' paid in)');
+      paid.forEach(function(x){ lines.push((x.tied ? 'T' : '') + TN.ordinal(x.place) + ' ' + r.byId[x.id].name + ' ' + M(x.cents)); });
+      lines.push('');
+    });
+    if(r.aceNames.length) lines.push('ACE: ' + r.aceNames.map(function(n, i){ return n + ' ' + M(r.ace.paidEach[i] || 0); }).join(', '));
+    if(r.ace.pot || r.ace.before || r.ace.change) lines.push('Ace pot now ' + M(r.ace.after));
+    if(r.ctpNames.length) lines.push('CTP: ' + r.ctpNames.map(function(n, i){ return n + ' ' + M(r.ctp.paidEach[i] || 0); }).join(', '));
+  }
+  lines.push('', 'Full sheet and tag list: ' + playersLink(r));
+  return lines.join('\n');
+}
+function b64u(bytes){ var s = ''; for(var i = 0; i < bytes.length; i++) s += String.fromCharCode(bytes[i]); return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
+function unb64u(str){ str = str.replace(/-/g, '+').replace(/_/g, '/'); while(str.length % 4) str += '='; var s = atob(str), b = new Uint8Array(s.length); for(var i = 0; i < s.length; i++) b[i] = s.charCodeAt(i); return b; }
+function playersLink(r){
+  var tl = tagListAfter(r);
+  var o = {n: leagueName(), d: S.tonight.date, m: r.moves.map(function(m){ return [r.byId[m.id].name, m.tagIn, m.tagOut, m.score]; }),
+    p: r.money ? r.divs.map(function(d){ return [d.name, d.entries, d.pay.rows.filter(function(x){ return x.cents > 0; }).map(function(x){ return [r.byId[x.id].name, x.place, x.tied ? 1 : 0, x.cents, x.score]; })]; }) : [],
+    a: r.money ? [r.ace.after, r.aceNames, r.ace.paidEach] : null, c: r.money ? [r.ctpNames, r.ctp.paidEach] : null,
+    t: Object.keys(tl).map(Number).sort(function(a, b){ return a - b; }).map(function(n){ return [n, tl[n]]; })};
+  return SITE + '?via=sheet#s=' + b64u(new TextEncoder().encode(JSON.stringify(o)));
+}
+function copy(text, ok){
+  if(navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(text).then(function(){ say(ok); }, function(){ fallbackCopy(text, ok); });
+  fallbackCopy(text, ok);
+}
+function fallbackCopy(text, ok){
+  var ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.top = '0'; ta.style.left = '-9999px'; document.body.appendChild(ta); ta.select();
+  var done = false; try{ done = document.execCommand('copy'); }catch(e){}
+  document.body.removeChild(ta);
+  if(done) say(ok); else window.prompt('Copy this:', text);
+}
+function fit(g, text, maxW){ text = String(text); if(g.measureText(text).width <= maxW) return text; while(text.length > 1 && g.measureText(text + '…').width > maxW) text = text.slice(0, -1); return text + '…'; }
+function drawImage(r){
+  var W = 1080, pad = 64, lh = 58, rows = [];
+  rows.push(['title', leagueName()]); rows.push(['sub', fmtDate(S.tonight.date)]);
+  if(r.moves.length){ rows.push(['h', 'Tags']); r.moves.forEach(function(m){ var d = m.tagIn - m.tagOut; rows.push(['tag', m.tagOut, r.byId[m.id].name, m.score == null ? 'DNF' : String(m.score), d > 0 ? '↑ from ' + m.tagIn : d < 0 ? '↓ from ' + m.tagIn : 'keeps it', d]); }); }
+  if(r.money){
+    r.divs.forEach(function(d){ var paid = d.pay.rows.filter(function(x){ return x.cents > 0; }); if(!paid.length) return; rows.push(['h', (d.name ? d.name + ' ' : '') + 'payouts']); paid.forEach(function(x){ rows.push(['pay', (x.tied ? 'T' : '') + TN.ordinal(x.place), r.byId[x.id].name, M(x.cents)]); }); });
+    if(r.ace.pot || r.ace.before || r.aceNames.length){ rows.push(['h', 'Ace pot']); r.aceNames.forEach(function(n, i){ rows.push(['pay', 'ACE', n, M(r.ace.paidEach[i] || 0)]); }); rows.push(['line', r.aceNames.length ? 'Left in the pot: ' + M(r.ace.after) : 'No aces. ' + M(r.ace.after) + ' rolls to next week.']); }
+    if(r.ctpNames.length){ rows.push(['h', 'CTP']); r.ctpNames.forEach(function(n, i){ rows.push(['pay', 'CTP', n, M(r.ctp.paidEach[i] || 0)]); }); }
+  }
+  var H = pad * 2 + rows.reduce(function(a, x){ return a + (x[0] === 'title' ? 80 : x[0] === 'h' ? 76 : lh); }, 0) + 70;
+  var cv = document.createElement('canvas'); cv.width = W; cv.height = H; var g = cv.getContext('2d');
+  var COND = '"Barlow Condensed", "Arial Narrow", sans-serif', BODY = 'Barlow, Arial, sans-serif';
+  g.fillStyle = '#F2EEE4'; g.fillRect(0, 0, W, H);
+  var y = pad;
+  rows.forEach(function(x){
+    g.textAlign = 'left';
+    if(x[0] === 'title'){ g.fillStyle = '#17201B'; g.font = '800 64px ' + COND; g.fillText(fit(g, String(x[1]).toUpperCase(), W - pad * 2), pad, y + 56); y += 80; }
+    else if(x[0] === 'sub'){ g.font = '600 32px ' + BODY; g.fillStyle = '#3B463F'; g.fillText(x[1], pad, y + 36); y += lh; }
+    else if(x[0] === 'h'){ y += 18; g.fillStyle = '#17201B'; g.fillRect(pad, y, W - pad * 2, 3); g.font = '800 40px ' + COND; g.fillText(String(x[1]).toUpperCase(), pad, y + 46); y += 58; }
+    else if(x[0] === 'tag'){
+      g.fillStyle = x[1] === 1 ? '#E8C252' : '#C9CFD3'; roundRect(g, pad, y + 6, 96, 46, 10); g.fill(); g.lineWidth = 3; g.strokeStyle = '#17201B'; g.stroke();
+      g.fillStyle = '#F2EEE4'; g.beginPath(); g.arc(pad + 16, y + 29, 6, 0, 7); g.fill(); g.stroke();
+      g.fillStyle = '#17201B'; g.font = '800 36px ' + COND; g.textAlign = 'right'; g.fillText(String(x[1]), pad + 86, y + 43); g.textAlign = 'left';
+      g.font = '700 30px ' + BODY; var mv = x[4], mw = g.measureText(mv).width;
+      g.font = '600 34px ' + BODY; g.fillText(fit(g, x[2] + '  ' + x[3], W - pad - 140 - mw - 24), pad + 120, y + 42);
+      g.fillStyle = x[5] > 0 ? '#1E6A44' : x[5] < 0 ? '#B3261E' : '#3B463F'; g.font = '700 30px ' + BODY; g.textAlign = 'right'; g.fillText(mv, W - pad, y + 42); y += lh;
+    }
+    else if(x[0] === 'pay'){
+      g.fillStyle = '#17201B'; g.font = '700 34px ' + COND; g.fillText(x[1], pad, y + 40);
+      g.font = '800 40px ' + COND; var aw = g.measureText(x[3]).width;
+      g.font = '600 34px ' + BODY; g.fillText(fit(g, x[2], W - pad * 2 - 100 - aw - 24), pad + 100, y + 40);
+      g.fillStyle = '#1E6A44'; g.font = '800 40px ' + COND; g.textAlign = 'right'; g.fillText(x[3], W - pad, y + 42); y += lh;
+    }
+    else if(x[0] === 'line'){ g.fillStyle = '#17201B'; g.font = '600 32px ' + BODY; g.fillText(fit(g, x[1], W - pad * 2), pad, y + 40); y += lh; }
+  });
+  g.textAlign = 'left'; g.fillStyle = '#3B463F'; g.font = '500 26px ' + BODY; g.fillText('Made with Tag Night · samsbench.com/discgolf-league', pad, H - pad + 20);
+  return cv;
+}
+function roundRect(g, x, y, w, h, r){ g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); }
+function download(blob, name){ var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove(); }
+function backupFile(){ download(new Blob([JSON.stringify(S, null, 1)], {type:'application/json'}), 'tag-night-backup-' + today() + '.json'); track('backup'); }
+
+/* ---------- lock in ---------- */
+function lockIn(){
+  var r = LAST, t = S.tonight; if(!r) return;
+  if(t.ex){ say('This is the example. Clear it and add your own scores to lock in.'); return; }
+  if(r.errs.length){ say('Fix the tag problem first.'); return; }
+  var lg = L(), last = lg.history[lg.history.length - 1];
+  var msg = 'Lock in ' + fmtDate(t.date) + '?\n\n' + r.moves.length + ' tags move on your tag list.' + (r.money ? '\nAce pot becomes ' + M(r.ace.after) + (r.ctp.after ? ', CTP carry ' + M(r.ctp.after) : '') + '.' : '');
+  if(last && last.date === t.date) msg = 'You already locked in a night on ' + fmtDate(t.date) + '. Locking in again adds this night’s pot money a second time.\n\n' + msg;
+  if(!confirm(msg)) return;
+  var before = JSON.parse(JSON.stringify({roster: lg.roster, pots: lg.pots}));
+  var link = playersLink(r);
+  lg.roster = TN.applyMoves(lg.roster, r.moves.map(function(m){ return {name: r.byId[m.id].alias || r.byId[m.id].name, tagIn: m.tagIn, tagOut: m.tagOut}; }));
+  t.potsBefore = JSON.parse(JSON.stringify(lg.pots));
+  if(r.money) lg.pots = {ace: r.ace.after / 100, ctp: r.ctp.after / 100};
+  lg.history.push({date: t.date, players: t.players.length, out: r.money ? r.cashOut : null, acePot: r.money ? r.ace.pot : null, aceAfter: r.money ? r.ace.after : null,
+    moves: r.moves.map(function(m){ return [r.byId[m.id].name, m.tagIn, m.tagOut]; }), link: link, undo: before});
+  t.locked = true;
+  track('lock-in');
+  try{ if(navigator.storage && navigator.storage.persist) navigator.storage.persist(); }catch(e){}
+  renderAll();
+  $('p1').scrollIntoView({behavior: 'smooth', block: 'start'});
+}
+function nextNight(){ var tab = S.tonight.tab; S.tonight = blankNight(); S.tonight.tab = tab; renderAll(); }
+
+/* ---------- example ---------- */
+function loadExample(){
+  if(!S.tonight.ex) MINE = JSON.parse(JSON.stringify(S));
+  var lg = newLeague('Thursday Tags · Oak Hollow');
+  lg.roster = {1:'Ray Ortiz', 2:'Sam Wu', 3:'Mike Dunn', 4:'Dee Carter', 5:'Luis Vega', 6:'Kelly Ross', 7:'Tom Becker', 8:'Priya Nair', 9:'Ben Holt', 10:'Chris Lane', 11:'Jess Park', 12:'Omar Said', 14:'Nate Fox'};
+  lg.cfg = Object.assign(defCfg(), {fee:10, ace:1, ctp:1, club:1}); lg.pots = {ace:43, ctp:0};
+  var rows = [['Division','Position','Raw Position','Name','Paid Status','Relative Score (total)','Total Score','Username'],
+    ['Open','1','1','Jess Park','Unpaid','-5','49','jessp'],['Open','T2','2','Ray Ortiz','Unpaid','-2','52','rayo'],['Open','T2','3','Mike Dunn','Unpaid','-2','52',''],['Open','4','4','Luis Vega','Unpaid','-1','53',''],
+    ['Open','5','5','Ana Lima','Unpaid','0','54',''],['Open','6','6','Tom Becker','Unpaid','+1','55',''],['Open','7','7','Ben Holt','Unpaid','+2','56',''],['Open','8','8','Kelly Ross','Unpaid','+4','58',''],
+    ['Rec','1','1','Dee Carter','Unpaid','+1','55',''],['Rec','2','2','Omar Said','Unpaid','+3','57',''],['Rec','3','3','Jo Kim','Unpaid','+4','58',''],['Rec','4','4','Priya Nair','Unpaid','+6','60',''],
+    ['Rec','5','5','Cal Dorsey','Unpaid','+7','61',''],['Rec','6','6','Nate Fox','Unpaid','','DNF','']];
+  S = {v:1, cur:0, leagues:[lg], tonight: Object.assign(blankNight(), {ex:true, tab:'paste', paste: rows.map(function(r){ return r.join('\t'); }).join('\n'), ctpWin:'Luis Vega'})};
+  setPlayers(TN.parseScores(rows));
+  S.tonight.players.forEach(function(p){ if(p.name === 'Kelly Ross'){ p.plays = false; p.playsSet = true; } });   /* left her tag at home */
+  renderAll();
+  track('example');
+}
+function clearExample(){ S = MINE || blank(); MINE = null; S.tonight.ex = false; renderAll(); }
+
+/* ---------- shared view (#s=) ---------- */
+var SHARED = null;
+try{ if(location.hash.indexOf('#s=') === 0) SHARED = JSON.parse(new TextDecoder().decode(unb64u(location.hash.slice(3)))); }catch(e){ SHARED = null; }
+var BADLINK = !SHARED && location.hash.indexOf('#s=') === 0;
+function renderShared(o){
+  document.body.classList.add('shared');
+  var h = '<header><b>' + esc(o.n) + '</b><span>' + esc(fmtDate(o.d)) + '</span></header>';
+  if(o.m && o.m.length){ h += '<section><h3>Tonight’s tag swaps</h3>'; o.m.forEach(function(m){ h += tagRow(m[0], Number(m[1]), Number(m[2]), m[3]); }); h += '</section>'; }
+  (o.p || []).forEach(function(d){ if(!d[2].length) return; h += '<section><h3>' + esc(d[0] || 'Payouts') + '<span>' + Number(d[1]) + ' paid in</span></h3>'; d[2].forEach(function(x){ h += '<div class="payrow"><span class="pl">' + (x[2] ? 'T' : '') + TN.ordinal(Number(x[1])) + '</span><span>' + esc(x[0]) + ' · ' + esc(x[4]) + '</span><span class="amt">' + M(Number(x[3])) + '</span></div>'; }); h += '</section>'; });
+  if(o.a){ h += '<section><h3>Ace pot</h3>' + (o.a[1] || []).map(function(n, i){ return '<div class="payrow"><span class="pl">ACE</span><span>' + esc(n) + '</span><span class="amt">' + M(Number((o.a[2] || [])[i] || 0)) + '</span></div>'; }).join('') + '<p style="margin:0">Ace pot now <b>' + M(Number(o.a[0]) || 0) + '</b></p></section>'; }
+  if(o.c && o.c[0] && o.c[0].length){ h += '<section><h3>CTP</h3>' + o.c[0].map(function(n, i){ return '<div class="payrow"><span class="pl">CTP</span><span>' + esc(n) + '</span><span class="amt">' + M(Number((o.c[1] || [])[i] || 0)) + '</span></div>'; }).join('') + '</section>'; }
+  if(o.t && o.t.length){ h += '<section><h3>Who holds which tag now<span>' + o.t.length + ' tags</span></h3>' + o.t.map(function(x){ return '<div class="mvrow"><span class="tag' + (Number(x[0]) === 1 ? ' gold' : '') + '" style="--w:50px">' + Number(x[0]) + '</span><span class="who">' + esc(x[1]) + '</span><span></span></div>'; }).join('') + '</section>'; }
+  $('sheet').innerHTML = h;
+  $('sharedTop').innerHTML = '<p style="margin:0 0 10px;font-weight:600">Your league director sent you these results.</p>';
+  var after = document.createElement('div'); after.style.cssText = 'max-width:560px;margin:18px auto 0';
+  after.innerHTML = '<p style="font-weight:600">Run a league night too? Tag Night swaps bag tags and splits payouts from your UDisc results. Free.</p><a class="btn primary" href="./?via=sheet-cta">Close out your league night</a>';
+  document.querySelector('.side').appendChild(after);
+  track('sheet-view');
+}
+
+/* ---------- events ---------- */
+function cfgSet(k, v){ L().cfg[k] = v; renderAll(); }
+function player(id){ return S.tonight.players.filter(function(x){ return x.id === id; })[0]; }
+document.addEventListener('click', function(e){
+  var t = e.target.closest('button, a'); if(!t) return;
+  if(t.dataset.tab){ S.tonight.tab = t.dataset.tab; renderForm(); save(); return; }
+  if(t.dataset.prolink){ track('pro-view'); return; }
+  if(t.dataset.sugg){ var sp = t.dataset.sugg.split('|'), p = player(sp[0]); if(p){ p.tag = Number(sp[1]); p.tagSet = true; p.alias = L().roster[p.tag]; p.plays = p.score != null || L().cfg.dnf === 'last'; renderAll(); } return; }
+  if(t.dataset.hlink){ var hn = L().history[Number(t.dataset.hlink)]; if(hn && hn.link){ copy(hn.link, 'Link copied'); track('share-link'); } return; }
+  if(t.dataset.up){
+    var parts = t.dataset.up.split('|'), g = parts[0], id = parts[1];
+    var ord = Array.prototype.map.call(t.closest('ol').querySelectorAll('button[data-up]'), function(b){ return b.dataset.up.split('|')[1]; });
+    var i = ord.indexOf(id); if(i > 0){ ord.splice(i, 1); ord.splice(i - 1, 0, id); }
+    S.tonight.order[g] = (S.tonight.order[g] || []).filter(function(x){ return ord.indexOf(x) < 0; }).concat(ord);
+    renderSheet(); save(); return;
+  }
+  switch(t.id){
+    case 'tryEx': loadExample(); $('tool').scrollIntoView({behavior:'smooth'}); break;
+    case 'clearEx': clearExample(); break;
+    case 'aText': if(LAST){ copy(sheetText(LAST), 'Copied. Paste it in your group chat.'); track('share-text'); } break;
+    case 'aLink': if(LAST){ copy(playersLink(LAST), 'Link copied. Players see tonight’s sheet and the tag list.'); track('share-link'); } break;
+    case 'aPrint': window.print(); track('print'); break;
+    case 'aImg': if(LAST){ var R = LAST; (document.fonts ? document.fonts.ready : Promise.resolve()).then(function(){ drawImage(R).toBlob(function(b){
+        var f = new File([b], 'tag-night.png', {type:'image/png'});
+        if(navigator.canShare && navigator.canShare({files:[f]}) && /Mobi|Android|iPhone|iPad/.test(navigator.userAgent)) navigator.share({files:[f]}).catch(function(){});
+        else { download(b, 'tag-night-' + S.tonight.date + '.png'); say('Picture saved'); }
+      }); }); track('share-image'); } break;
+    case 'aLock': lockIn(); break;
+    case 'nextNight': case 'nextNight2': nextNight(); break;
+    case 'undo':
+      var lg = L(), last = lg.history[lg.history.length - 1];
+      if(last && last.undo && confirm('Undo the lock-in from ' + fmtDate(last.date) + '? Tags and pots go back to how they were.')){ lg.roster = last.undo.roster; lg.pots = last.undo.pots; lg.history.pop(); if(S.tonight.locked){ S.tonight.locked = false; S.tonight.potsBefore = null; } renderAll(); say('Undone'); }
+      break;
+    case 'backup': case 'backupNow': backupFile(); break;
+    case 'copyList': copy(rosterText() || '(empty)', 'Tag list copied'); break;
+    case 'buy': track('buy-click'); break;
+    case 'proGo':
+      var v = ($('proIn').value || '').trim(), msg = $('proMsg'); if(!v) return;
+      if(v.indexOf('@') < 0){
+        sha256hex(v.toUpperCase()).then(function(hx){ if(GIFT.indexOf(hx) >= 0){ PRO = {gift: hx.slice(0, 12)}; lsSet(PROKEY, PRO); track('pro-gift'); renderAll(); say('Pro unlocked'); } else msg.innerHTML = '<p class="msg err">That code didn’t work. Check the spelling.</p>'; });
+      } else {
+        msg.innerHTML = '<p class="msg">Checking…</p>';
+        fetch(VERIFY, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({app: APP_KEY, email: v})}).then(function(r){ return r.json(); }).then(function(j){
+          if(j && j.ok && j.valid){ PRO = {email: v}; lsSet(PROKEY, PRO); track('pro-unlocked'); renderAll(); say('Pro unlocked'); }
+          else msg.innerHTML = '<p class="msg err">No purchase found for that email. Use the email you paid with.</p>';
+        }, function(){ msg.innerHTML = '<p class="msg err">Couldn’t check right now. Try again in a minute.</p>'; });
+      }
+      break;
+  }
+});
+document.addEventListener('change', function(e){
+  var t = e.target, id = t.id;
+  if(t.dataset.plays){ var p = player(t.dataset.plays); if(p){ p.plays = t.checked; p.playsSet = true; renderSheet(); save(); } return; }
+  if(t.dataset.paid){ var pp = player(t.dataset.paid); if(pp){ pp.paid = t.checked; renderSheet(); save(); } return; }
+  if(t.dataset.tag){
+    var q = player(t.dataset.tag);
+    if(q){
+      var n = Math.round(Number(t.value)); q.tag = t.value === '' || !(n > 0) ? null : n; q.tagSet = true; q.plays = q.tag != null && (q.score != null || L().cfg.dnf === 'last');
+      var cb = document.querySelector('[data-plays="' + q.id + '"]');   /* update the row in place: a re-render here would swallow the click that caused the blur */
+      if(cb){ cb.checked = q.plays; cb.disabled = q.tag == null || (q.score == null && L().cfg.dnf !== 'last'); cb.nextElementSibling.textContent = q.score == null && L().cfg.dnf !== 'last' ? 'DNF' : q.tag == null ? 'no tag' : 'yes'; }
+      renderSheet(); save();
+    }
+    return;
+  }
+  if(t.dataset.added != null){ S.tonight.added[t.dataset.added] = t.value; renderSheet(); save(); return; }
+  if(t.dataset.acebuy != null){ S.tonight.aceBuy[t.dataset.acebuy] = t.value; renderSheet(); save(); return; }
+  if(id === 'lgSel'){
+    if(t.value === 'new'){
+      if(!isPro()){ t.value = String(S.cur); track('pro-wall'); say('More leagues come with Pro'); $('pro').scrollIntoView({behavior:'smooth'}); return; }
+      S.leagues.push(newLeague('League ' + (S.leagues.length + 1))); S.cur = S.leagues.length - 1;
+    } else S.cur = Number(t.value);
+    S.tonight.players.forEach(function(p){ if(!p.tagSet){ p.tag = TN.tagOf(L().roster, p.name, p.user); p.plays = p.tag != null && p.score != null; } });
+    renderAll(); return;
+  }
+  if(id === 'date'){ S.tonight.date = t.value || today(); S.tonight.dateSet = true; renderSheet(); save(); return; }
+  if(id === 'scoreCol'){ S.tonight.scoreCol = t.value; reparse(); return; }
+  if(id === 'restore' && t.files[0]){
+    t.files[0].text().then(function(txt){ var o = JSON.parse(txt); if(o && o.v === 1 && Array.isArray(o.leagues)){ if(confirm('Replace what’s on this device with the backup?')){ S = fixState(o); renderAll(); say('Backup restored'); } } else say('That isn’t a Tag Night backup'); }).catch(function(){ say('That isn’t a Tag Night backup'); });
+    t.value = ''; return;
+  }
+  if(id === 'file' && t.files[0]){ readFile(t.files[0]); t.value = ''; return; }
+  if(id === 'mode'){
+    if(t.value === 'split' && !isPro()){ track('pro-wall'); }
+    L().cfg.mode = t.value; renderAll(); return;
+  }
+  if(id === 'unit' || id === 'perRow'){ cfgSet(id, Number(t.value)); return; }
+  if(id === 'tie' || id === 'scoreUse' || id === 'dnf' || id === 'aceExtra'){
+    L().cfg[id] = t.value;
+    if(id === 'dnf') S.tonight.players.forEach(function(p){ if(p.score == null && !p.playsSet) p.plays = p.tag != null && t.value === 'last'; });
+    renderAll(); return;
+  }
+  if(id === 'roster') applyRoster(t.value);
+});
+var lastRoster = null;
+function applyRoster(text){
+  if(text === lastRoster) return;   /* change also fires on blur after typing; don't re-render twice (that swallows the click) */
+  lastRoster = text; rosterTouched = true;
+  var pr = TN.parseRoster(text); L().roster = pr.roster;
+  var m = '';
+  if(pr.bad.length) m += '<p class="msg warn">Skipped ' + pr.bad.length + ' line(s) without a tag number: ' + esc(pr.bad.slice(0, 3).join(' / ')) + '</p>';
+  if(pr.dup.length) m += '<p class="msg warn">Tag #' + pr.dup.join(', #') + ' is on two lines; the last one was kept.</p>';
+  $('rosterMsg').innerHTML = m;
+  S.tonight.players.forEach(function(p){ if(!p.tagSet){ var tg = TN.tagOf(L().roster, p.name, p.user); p.tag = tg; if(!p.playsSet) p.plays = tg != null && p.score != null; } });
+  renderAll();
+}
+document.addEventListener('input', function(e){
+  var t = e.target, id = t.id;
+  if(['fee','ace','ctp','club','val','acePct','aceCap','split'].indexOf(id) >= 0){ L().cfg[id] = t.value; renderSheet(); save(); }
+  else if(id === 'acePot' || id === 'ctpPot'){ L().pots[id === 'acePot' ? 'ace' : 'ctp'] = Number(t.value) || 0; renderSheet(); save(); }
+  else if(id === 'aces' || id === 'ctpWin' || id === 'counted'){ S.tonight[id] = t.value; renderSheet(); save(); }
+  else if(id === 'lgName'){ L().name = t.value; renderSheet(); save(); }
+  else if(id === 'roster'){ clearTimeout(window._rt); window._rt = setTimeout(function(){ applyRoster(t.value); }, 600); }
+  else if(id === 'paste' || id === 'typed'){
+    clearTimeout(window._pt);
+    var val = t.value;
+    window._pt = setTimeout(function(){ freshNightIfLocked(); S.tonight[id] = val; S.tonight.tab = id === 'paste' ? 'paste' : 'type'; reparse(); }, 350);
+  }
+});
+function readFile(f){
+  var isX = /\.xlsx$/i.test(f.name) || (f.type || '').indexOf('spreadsheet') >= 0;
+  (isX ? f.arrayBuffer().then(xlsxRows) : f.text().then(function(t){ return TN.rowsFromText(t).rows; })).then(function(rows){
+    freshNightIfLocked();
+    S.tonight.tab = 'file'; S.tonight.src = f.name; S.tonight.rows = rows; S.tonight.scoreCol = '';
+    var p = TN.parseScores(rows);
+    setPlayers(p); track('file-read');
+  }).catch(function(){
+    $('parseMsg').innerHTML = '<p class="msg err">Couldn’t read that file here. Open it in Sheets or Excel, copy the table, and use the Paste tab.</p>'; track('file-fail');
+  });
+}
+var drop = $('drop');
+['dragenter','dragover'].forEach(function(ev){ drop.addEventListener(ev, function(e){ e.preventDefault(); drop.classList.add('over'); }); });
+['dragleave','drop'].forEach(function(ev){ drop.addEventListener(ev, function(e){ e.preventDefault(); drop.classList.remove('over'); }); });
+drop.addEventListener('drop', function(e){ if(e.dataTransfer.files[0]) readFile(e.dataTransfer.files[0]); });
+
+/* ---------- start ---------- */
+if(GC_CODE){ var gs = document.createElement('script'); gs.async = true; gs.src = '//gc.zgo.at/count.js'; gs.setAttribute('data-goatcounter', 'https://' + GC_CODE + '.goatcounter.com/count'); document.head.appendChild(gs); }
+(function(){
+  var q = new URLSearchParams(location.search), via = (q.get('via') || '').replace(/[^a-z0-9-]/g, '').slice(0, 20), af = (q.get('a') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 40);
+  if(via) track('via-' + via); if(af) track('aff-' + af);
+  if(via === 'selftest') Object.keys(FUNNEL).forEach(function(n){ track(n); });   /* GoatCounter ignores server IPs: open ?via=selftest once on a real laptop and every funnel event should +1 */
+  affCode();
+})();
+if(SHARED) renderShared(SHARED);
+else {
+  if(S.tonight.ex) S.tonight = blankNight();
+  renderAll();
+  if(BADLINK) $('parseMsg').innerHTML = '<p class="msg err">That results link looks cut off. Ask your league director to send it again.</p>';
+  if(/[?&]bought=1/.test(location.search)) setTimeout(function(){ $('pro').scrollIntoView(); }, 300);
+  if(location.hash === '#pro') track('pro-view');
+  if('IntersectionObserver' in window){ var io = new IntersectionObserver(function(es){ es.forEach(function(x){ if(x.isIntersecting){ trackOnce('pro-view'); io.disconnect(); } }); }, {threshold: .5}); io.observe($('pro')); }
+}
+})();
+</script>
+</body>
+</html>
