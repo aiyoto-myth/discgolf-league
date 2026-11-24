@@ -331,7 +331,7 @@ body.shared .sharedTop{display:block;max-width:560px;margin:10px auto 16px}
     <h2>Questions league directors ask</h2>
     <details><summary>Do my players have to download anything?</summary><p>No. Everyone keeps scoring in UDisc like they do now. Only you open Tag Night, after the round, with the exported leaderboard.</p></details>
     <details><summary>How do I get the file out of UDisc?</summary><p>In your league or event: Event tools → Leaderboard → Actions → Export. Upload that file in step 1. If your phone won’t open it here, open it in Sheets or Excel, select the whole table, copy, and paste it into the Paste tab.</p></details>
-    <details><summary>UDisc says everyone is unpaid. Does that matter?</summary><p>No. Most leagues take cash at the tee and never tick “paid” in UDisc, so Tag Night counts everyone as paid. Untick anyone who didn’t pay in the table.</p></details>
+    <details><summary>UDisc says everyone is unpaid. Does that matter?</summary><p>Not for the payouts. If you take cash at the tee, UDisc may not know who paid, so Tag Night counts everyone as paid. Untick anyone who didn’t pay in the table.</p></details>
     <details><summary>Who plays for tags?</summary><p>Anyone on your tag list who finished tonight. If someone left their tag at home, untick “Playing for a tag” next to their name and their tag stays put. The best score among tag players takes the lowest tag in play, and so on down. Tags of people who didn’t play never move.</p></details>
     <details><summary>What about casual rounds where two people swap tags?</summary><p>Use the Type tab: enter just those players with their scores and tags (like “Ray 50 #1”), then lock it in. It updates the same tag list.</p></details>
     <details><summary>How are ties handled?</summary><p>For tags, you pick: the lower tag coming in wins, or you play it off and set the order. For money, tied players share the payouts of the places they tie for, like PDGA events do.</p></details>
@@ -851,7 +851,7 @@ function parseMsgHtml(){
     h += '<p class="msg ok">' + ps.length + (L().cfg.perRow == 2 ? ' teams' : ' players') + (t.scoreColUsed ? ' · scores from “' + esc(t.scoreColUsed) + '”' : '') + ' · ' + tagged + ' with a tag' +
       (noScore ? ' · ' + noScore + ' without a score (DNF)' : '') + '.</p>';
     var unpaidMarks = ps.filter(function(p){ return p.paidMark === false; }).length;
-    if(unpaidMarks) h += '<p class="msg warn">UDisc shows ' + unpaidMarks + ' as unpaid. Cash leagues usually never tick that box, so everyone counts as paid here. Untick anyone who really didn’t pay.</p>';
+    if(unpaidMarks) h += '<p class="msg warn">UDisc shows ' + unpaidMarks + ' as unpaid. If you collect cash at the tee, UDisc may not know who paid, so everyone counts as paid here. Untick anyone who really didn’t pay.</p>';
   }
   (t.warn || []).forEach(function(w){ h += '<p class="msg warn">' + esc(w) + '</p>'; });
   if(t.skipped && t.skipped.length) h += '<p class="msg warn">Skipped ' + t.skipped.length + ' line(s): ' + t.skipped.slice(0, 4).map(function(s){ return '“' + esc(s.line.slice(0, 40)) + '” (' + esc(s.why) + ')'; }).join(', ') + '</p>';
@@ -1058,7 +1058,7 @@ function renderPro(){
   el.innerHTML = '<h2>Tag Night Pro</h2>' +
     '<p>Free covers every league night, backups included. Pro is for the organizer who runs it all season.</p>' +
     '<ul><li>The whole season, not just the last ' + FREE_NIGHTS + ' nights</li><li>Season stats: most nights at #1, biggest climb, ace pot high</li><li>Your own payout split, like 50 / 30 / 20</li><li>More than one league (Tuesday doubles, Thursday tags…)</li></ul>' +
-    '<p><span class="price">' + PRICE + '</span> once. No subscription.</p>' +
+    '<p><span class="price">' + PRICE + ' USD</span> once. No subscription. Checkout may show it in your own currency.</p>' +
     '<p><a class="btn primary" id="buy" href="' + esc(buyUrl()) + '">Get Pro for ' + PRICE + '</a></p>' +
     (bought ? '<p><b>Thanks for buying!</b> Enter the email you paid with to unlock.</p>' : '') +
     '<label for="proIn" style="margin-top:12px">Already bought? Enter the email you paid with, or a gift code</label><div class="row"><input type="text" id="proIn" autocomplete="email"><button class="btn" type="button" id="proGo">Unlock</button></div><div id="proMsg"></div>';
