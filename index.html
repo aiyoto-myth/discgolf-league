@@ -613,7 +613,8 @@ var TN = (function(){
       var pool = d.entries * (cfg.fee - cfg.ctp - cfg.club) - (cfg.aceExtra ? 0 : buy * cfg.ace) + (d.added || 0);
       pool = Math.max(0, pool);
       var fin = d.finishers.filter(function(f){ return f.score != null; }).length;
-      var k = cfg.split && cfg.split.length ? Math.min(cfg.split.length, fin) : placesPaid(d.entries, fin, cfg.mode, cfg.val);
+      var field = d.field != null ? d.field : d.entries;   /* rows that compete (teams in doubles), not entries */
+      var k = cfg.split && cfg.split.length ? Math.min(cfg.split.length, fin) : placesPaid(field, fin, cfg.mode, cfg.val);
       var pay = payouts(d.finishers, pool, k, cfg.unit, cfg.split);
       res.divs.push({name: d.name, entries: d.entries, pool: pool, k: pay.k, pay: pay, buy: buy});
       res.in += d.entries * cfg.fee + (cfg.aceExtra ? buy * cfg.ace : 0) + (d.added || 0);
@@ -801,15 +802,21 @@ function xlsxRows(buf){
 }
 
 /* ---------- tonight's players ---------- */
+var UNLOCKED_NOTE = '';
 function freshNightIfLocked(){
   if(S.tonight.ex){ S = MINE || blank(); MINE = null; S.tonight.ex = false; }
+  var t = S.tonight;
+  if(!t.locked && t.players.length && !t.dateSet && t.date !== today()){
+    UNLOCKED_NOTE = 'The night of ' + fmtDate(t.date) + ' was never locked in, so its tag swaps and pot money were not saved. Starting a fresh night. To save it, re-upload that night’s file, set its date, and lock it in before this one.';
+    t.locked = true;
+  }
   if(S.tonight.locked){ var tab = S.tonight.tab; S.tonight = blankNight(); S.tonight.tab = tab; }
   if(!S.tonight.dateSet) S.tonight.date = today();
 }
 function parseNow(){
   var t = S.tonight, input = t.tab === 'file' ? t.rows : t.tab === 'paste' ? t.paste : t.typed;
   if(!input || (typeof input === 'string' && !input.trim())) return null;
-  return TN.parseScores(input, t.scoreCol);
+  return TN.parseScores(input, t.scoreCol || L().cfg.scoreCol || '');
 }
 function setPlayers(parsed){
   var t = S.tonight, old = {};
@@ -821,7 +828,7 @@ function setPlayers(parsed){
     var tg = p.tag != null ? p.tag : TN.tagOf(L().roster, p.name, p.user);
     if(o && o.tagSet) tg = o.tag;
     var alias = o && o.alias ? o.alias : '';
-    return {id: 'p' + i, name: p.name, user: p.user, div: div, score: p.score, tag: tg, tagSet: !!(o && o.tagSet),
+    return {id: 'p' + i, name: p.name, user: p.user, div: div, score: p.score, tag: tg, tagSet: !!(o && o.tagSet) || p.tag != null,   /* a tag written in the input ("#3" or a Tag column) is the director's word */
       plays: o && o.playsSet ? o.plays : (tg != null && p.score != null), playsSet: !!(o && o.playsSet),
       paid: o ? o.paid : true, paidMark: p.paidMark, missingRound: p.missingRound, alias: alias};
   });
@@ -833,6 +840,7 @@ function reparse(){ var p = parseNow(); if(p) setPlayers(p); else { S.tonight.pl
 
 function parseMsgHtml(){
   var t = S.tonight, ps = t.players, h = '';
+  if(UNLOCKED_NOTE && !t.locked){ h += '<p class="msg warn">' + esc(UNLOCKED_NOTE) + '</p>'; }
   if(t.locked) return '<p class="msg ok">Locked in. Tag list and pots are updated for next week. <button class="btn small" type="button" id="backupNow">Save backup file</button> <button class="btn small" type="button" id="nextNight">Start the next night</button></p>';
   if(!ps.length){
     if((t.tab === 'paste' && t.paste.trim()) || (t.tab === 'type' && t.typed.trim()) || (t.tab === 'file' && t.rows)) h += '<p class="msg err">No players found. ' + (t.tab === 'type' ? 'Put one player per line with their score.' : 'Is this the leaderboard export from UDisc, with its header row?') + '</p>';
@@ -887,7 +895,7 @@ function compute(){
     var per = Number(cfg.perRow) === 2 ? 2 : 1, dg = groupBy(ps, 'div');
     var divs = Object.keys(dg).map(function(dn){
       var paid = dg[dn].filter(function(p){ return p.paid; }), b = t.aceBuy[dn];
-      return {name: dn, entries: paid.length * per, finishers: paid.map(function(p){ return {id: p.id, score: p.score}; }), added: cents(t.added[dn]),
+      return {name: dn, entries: paid.length * per, field: paid.length, finishers: paid.map(function(p){ return {id: p.id, score: p.score}; }), added: cents(t.added[dn]),
         aceBuyins: b === '' || b == null ? null : Math.max(0, Math.round(Number(b)) || 0)};
     });
     var split = null; r.splitLocked = false;
@@ -1075,7 +1083,7 @@ function renderForm(){
   var dn = Object.keys(groupBy(t.players, 'div'));
   $('addedBox').innerHTML = dn.length ? '<div class="grid2">' + dn.map(function(d){
     return '<div class="field"><label>Added cash' + (d ? ' · ' + esc(d) : '') + ' $</label><input type="number" min="0" step="1" inputmode="decimal" data-added="' + esc(d) + '" value="' + esc(t.added[d] || '') + '"></div>' +
-      '<div class="field"><label>Ace buy-ins' + (d ? ' · ' + esc(d) : '') + ' (blank = all)</label><input type="number" min="0" step="1" inputmode="numeric" data-acebuy="' + esc(d) + '" value="' + esc(t.aceBuy[d] == null ? '' : t.aceBuy[d]) + '"></div>';
+      '<div class="field"><label>Ace buy-ins, players' + (d ? ' · ' + esc(d) : '') + ' (blank = all)</label><input type="number" min="0" step="1" inputmode="numeric" data-acebuy="' + esc(d) + '" value="' + esc(t.aceBuy[d] == null ? '' : t.aceBuy[d]) + '"></div>';
   }).join('') + '</div>' : '';
   $('exNote').hidden = !t.ex;
   $('parseMsg').innerHTML = parseMsgHtml();
@@ -1185,7 +1193,7 @@ function lockIn(){
   if(r.money) lg.pots = {ace: r.ace.after / 100, ctp: r.ctp.after / 100};
   lg.history.push({date: t.date, players: t.players.length, out: r.money ? r.cashOut : null, acePot: r.money ? r.ace.pot : null, aceAfter: r.money ? r.ace.after : null,
     moves: r.moves.map(function(m){ return [r.byId[m.id].name, m.tagIn, m.tagOut]; }), link: link, undo: before});
-  t.locked = true;
+  t.locked = true; UNLOCKED_NOTE = '';
   track('lock-in');
   try{ if(navigator.storage && navigator.storage.persist) navigator.storage.persist(); }catch(e){}
   renderAll();
@@ -1263,7 +1271,7 @@ document.addEventListener('click', function(e){
     case 'nextNight': case 'nextNight2': nextNight(); break;
     case 'undo':
       var lg = L(), last = lg.history[lg.history.length - 1];
-      if(last && last.undo && confirm('Undo the lock-in from ' + fmtDate(last.date) + '? Tags and pots go back to how they were.')){ lg.roster = last.undo.roster; lg.pots = last.undo.pots; lg.history.pop(); if(S.tonight.locked){ S.tonight.locked = false; S.tonight.potsBefore = null; } renderAll(); say('Undone'); }
+      if(last && last.undo && confirm('Undo the lock-in from ' + fmtDate(last.date) + '? Tags and pots go back to how they were.')){ lg.roster = last.undo.roster; lg.pots = last.undo.pots; lg.history.pop(); if(S.tonight.locked){ S.tonight.locked = false; S.tonight.potsBefore = null; } retag(); renderAll(); say('Undone. Tonight’s tags were re-read from the tag list.'); }
       break;
     case 'backup': case 'backupNow': backupFile(); break;
     case 'copyList': copy(rosterText() || '(empty)', 'Tag list copied'); break;
@@ -1303,11 +1311,10 @@ document.addEventListener('change', function(e){
       if(!isPro()){ t.value = String(S.cur); track('pro-wall'); say('More leagues come with Pro'); $('pro').scrollIntoView({behavior:'smooth'}); return; }
       S.leagues.push(newLeague('League ' + (S.leagues.length + 1))); S.cur = S.leagues.length - 1;
     } else S.cur = Number(t.value);
-    S.tonight.players.forEach(function(p){ if(!p.tagSet){ p.tag = TN.tagOf(L().roster, p.name, p.user); p.plays = p.tag != null && p.score != null; } });
-    renderAll(); return;
+    retag(); renderAll(); return;
   }
   if(id === 'date'){ S.tonight.date = t.value || today(); S.tonight.dateSet = true; renderSheet(); save(); return; }
-  if(id === 'scoreCol'){ S.tonight.scoreCol = t.value; reparse(); return; }
+  if(id === 'scoreCol'){ S.tonight.scoreCol = t.value; L().cfg.scoreCol = t.value; reparse(); return; }
   if(id === 'restore' && t.files[0]){
     t.files[0].text().then(function(txt){ var o = JSON.parse(txt); if(o && o.v === 1 && Array.isArray(o.leagues)){ if(confirm('Replace what’s on this device with the backup?')){ S = fixState(o); renderAll(); say('Backup restored'); } } else say('That isn’t a Tag Night backup'); }).catch(function(){ say('That isn’t a Tag Night backup'); });
     t.value = ''; return;
@@ -1334,8 +1341,17 @@ function applyRoster(text){
   if(pr.bad.length) m += '<p class="msg warn">Skipped ' + pr.bad.length + ' line(s) without a tag number: ' + esc(pr.bad.slice(0, 3).join(' / ')) + '</p>';
   if(pr.dup.length) m += '<p class="msg warn">Tag #' + pr.dup.join(', #') + ' is on two lines; the last one was kept.</p>';
   $('rosterMsg').innerHTML = m;
-  S.tonight.players.forEach(function(p){ if(!p.tagSet){ var tg = TN.tagOf(L().roster, p.name, p.user); p.tag = tg; if(!p.playsSet) p.plays = tg != null && p.score != null; } });
+  retag();
   renderAll();
+}
+/* Re-read tonight's tags from the tag list (after the list, the league or an undo changed). A locked night keeps the tags it was locked with. */
+function retag(){
+  if(S.tonight.locked) return;
+  S.tonight.players.forEach(function(p){
+    if(p.tagSet && p.alias){ var a = TN.tagsOf(L().roster, p.alias); if(a.length){ p.tag = a[0]; } else { p.tagSet = false; p.alias = ''; } }
+    if(!p.tagSet){ p.tag = TN.tagOf(L().roster, p.name, p.user); }
+    if(!p.playsSet) p.plays = p.tag != null && (p.score != null || L().cfg.dnf === 'last');
+  });
 }
 document.addEventListener('input', function(e){
   var t = e.target, id = t.id;
@@ -1354,8 +1370,8 @@ function readFile(f){
   var isX = /\.xlsx$/i.test(f.name) || (f.type || '').indexOf('spreadsheet') >= 0;
   (isX ? f.arrayBuffer().then(xlsxRows) : f.text().then(function(t){ return TN.rowsFromText(t).rows; })).then(function(rows){
     freshNightIfLocked();
-    S.tonight.tab = 'file'; S.tonight.src = f.name; S.tonight.rows = rows; S.tonight.scoreCol = '';
-    var p = TN.parseScores(rows);
+    S.tonight.tab = 'file'; S.tonight.src = f.name; S.tonight.rows = rows; S.tonight.scoreCol = L().cfg.scoreCol || '';
+    var p = TN.parseScores(rows, S.tonight.scoreCol);
     setPlayers(p); track('file-read');
   }).catch(function(){
     $('parseMsg').innerHTML = '<p class="msg err">Couldn’t read that file here. Open it in Sheets or Excel, copy the table, and use the Paste tab.</p>'; track('file-fail');
