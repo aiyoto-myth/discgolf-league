@@ -681,12 +681,19 @@ var SRC = (function(){ try{
 }catch(e){ return ''; } })();
 var FUNNEL = {'example':1, 'tool-start':1, 'file-read':1, 'close-out':1, 'lock-in':1, 'share-text':1, 'share-image':1, 'share-link':1, 'pro-view':1, 'pro-wall':1, 'buy-click':1, 'pro-unlocked':1, 'pro-gift':1, 'backup':1};
 var ONCE = {};
-function track(name, tries){
-  try{
-    if(!tries && SRC && FUNNEL[name]) track(name + '.' + SRC);
-    if(window.goatcounter && window.goatcounter.count) window.goatcounter.count({path: name, title: name, event: true});
-    else if((tries || 0) < 20) setTimeout(function(){ track(name, (tries || 0) + 1); }, 500);
-  }catch(e){}
+/* GoatCounter drops bursts from one visitor (11-24: 28 events fired at once, 9 counted), so events go out one at a time. */
+var GQ = [], GQT = null, GQTRIES = 0;
+function pump(){
+  if(GQT || !GQ.length) return;
+  if(!(window.goatcounter && window.goatcounter.count)){ if(GQTRIES++ < 40) GQT = setTimeout(function(){ GQT = null; pump(); }, 500); return; }
+  var n = GQ.shift();
+  try{ window.goatcounter.count({path: n, title: n, event: true}); }catch(e){}
+  GQT = setTimeout(function(){ GQT = null; pump(); }, 400);
+}
+function track(name){
+  GQ.push(name);
+  if(SRC && FUNNEL[name]) GQ.push(name + '.' + SRC);
+  pump();
 }
 function trackOnce(name){ if(!ONCE[name]){ ONCE[name] = 1; track(name); } }
 
