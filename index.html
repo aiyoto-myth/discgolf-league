@@ -750,7 +750,7 @@ function names(str){
   S.tonight.players.forEach(function(p){ if(p.name.indexOf(',') >= 0 && s.indexOf(p.name) >= 0){ out.push(p.name); s = s.split(p.name).join(','); } });
   return out.concat(s.split(/[,;\n]/).map(function(x){ return x.trim(); }).filter(Boolean));
 }
-function fmtDate(d){ try{ var x = new Date(d + 'T12:00:00'); if(isNaN(x)) return d; return x.toLocaleDateString(undefined, {weekday:'short', month:'short', day:'numeric'}); }catch(e){ return d; } }
+function fmtDate(d){ try{ var x = new Date(d + 'T12:00:00'); if(isNaN(x)) return d; return x.toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'}); }catch(e){ return d; } }
 function leagueName(){ return (L().name || '').trim() || 'League night'; }
 
 /* ---------- read xlsx without a library (UDisc exports .xlsx) ---------- */
